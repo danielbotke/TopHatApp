@@ -1,0 +1,14 @@
+org.primefaces.mobile.component.buttongroup
+org.primefaces.mobile.component.content
+org.primefaces.mobile.component.field
+org.primefaces.mobile.component.footer
+org.primefaces.mobile.component.header
+org.primefaces.mobile.component.inputrange
+org.primefaces.mobile.component.navbar
+org.primefaces.mobile.component.page
+org.primefaces.mobile.component.slider
+org.primefaces.mobile.component.uiswitch
+org.primefaces.mobile.component.view
+org.primefaces.mobile.navigation
+org.primefaces.mobile.renderkit
+org.primefaces.mobile.util
