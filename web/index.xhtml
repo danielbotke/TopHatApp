@@ -4,6 +4,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
+    <head>
+        <title> TopHat Automação </title>
+    </head>
     <body>
         <f:view>
             <ui:param name="originalURL" value="#{request.requestURI}?#{request.queryString}" />
@@ -15,9 +18,6 @@
                 <h:panelGroup rendered="#{empty userSession.profile}" id="socialButtons" >
                     <h:commandLink id="facebook" action="#{userSession.socialConnect('facebook')}" >
                         <h:graphicImage value="http://www.guiamedianeira.com.br/temas/2012/imagens/login_facebook.jpg" />
-                    </h:commandLink>
-                    <h:commandLink id="google" action="#{userSession.socialConnect('google')}" >
-                        <h:graphicImage value="http://www.smartsheet.com/files/haymaker/google_search.png" />
                     </h:commandLink>
                 </h:panelGroup>
 

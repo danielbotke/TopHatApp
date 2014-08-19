@@ -4,7 +4,12 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
     <ui:composition template="/template.xhtml">
-
+        <f:view>
+            <ui:param name="originalURL" value="#{request.requestURI}?#{request.queryString}" />
+            <f:metadata>
+                <f:event rendered="#{empty userSession.profile}" type="preRenderView" listener="#{userSession.setOriginalURL(originalURL)}" />
+            </f:metadata>
+        </f:view>
     </ui:composition>
 </html>
 

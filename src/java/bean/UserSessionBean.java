@@ -47,7 +47,7 @@ public class UserSessionBean implements Serializable {
         manager.setSocialAuthConfig(config);
         // 'successURL' is the page you'll be redirected to on successful login
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String successURL = "http://localhost:8080/"+externalContext.getRequestContextPath() + "/socialLoginSuccess.xhtml";
+        String successURL = "http://localhost:8080/"+externalContext.getRequestContextPath() + "/faces/home.xhtml";
         String authenticationURL;
         authenticationURL = manager.getAuthenticationUrl(providerID, successURL);
         FacesContext.getCurrentInstance().getExternalContext().redirect(authenticationURL);
@@ -87,6 +87,11 @@ public class UserSessionBean implements Serializable {
         } catch (IOException ex) {
             System.out.println("UserSessionBean - IOException: " + ex.toString());
         }
+    }
+    
+    public void teste() throws IOException{
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();     
+        FacesContext.getCurrentInstance().getExternalContext().redirect(externalContext.getRequestContextPath() + "home.xhtml");
     }
 
     public SocialAuthManager getManager() {
