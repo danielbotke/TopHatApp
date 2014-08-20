@@ -4,15 +4,27 @@
  */
 package models;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  *
  * @author Daniel
  */
-public class Device {
+@Entity
+public class Device implements Serializable {
+    @Id
+    @GeneratedValue
+    private int id;
     private String name;
     private int actionPort;
     private int statusDevice;
     private char type;
+
+    public Device() {
+    }
 
     public Device(String name, int actionPort, int statusDevice, char type) {
         this.name = name;
@@ -59,6 +71,14 @@ public class Device {
 
     public void setType(char type) {
         this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     

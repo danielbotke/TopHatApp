@@ -4,14 +4,24 @@
  */
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import javax.persistence.Entity; 
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author Daniel
  */
-public class Home {
-    private ArrayList<Room> rooms = new ArrayList<Room>();
+@Entity
+public class Home implements Serializable {
+    @Id
+    private int id;
+    @OneToMany
+    private ArrayList<Room> rooms = new ArrayList<>();
+    @OneToMany
+    private ArrayList<IUser> users = new ArrayList<>();
     private String url;
 
     public ArrayList<Room> getRooms() {
@@ -29,5 +39,22 @@ public class Home {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<IUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<IUser> users) {
+        this.users = users;
+    }
+    
     
 }
