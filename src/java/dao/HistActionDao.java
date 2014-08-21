@@ -8,60 +8,51 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import models.Room;
+import models.HistAction;
 import utils.JpaUtil;
 
 /**
  *
  * @author Daniel
  */
-public class RoomDao {
+public class HistActionDao {
 
-    public Room get(int id) {
+    public HistAction get(int id) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            return em.find(Room.class, id);
+            return em.find(HistAction.class, id);
         } finally {
             em.close();
         }
     }
 
-    public boolean save(Room r) {
+    public boolean save(HistAction h) {
         EntityManager em = JpaUtil.get().getEntityManager();
-        Boolean result = this.save(r, em);
-        em.close();
-        return result;
-    }
-
-    public boolean save(Room r, EntityManager em) {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
 
         try {
-            if (this.get(r.getId()) == null) {
-                em.persist(r);
+            if (this.get(h.getId()) == null) {
+                em.persist(h);
             } else {
-                em.merge(r);
+                em.merge(h);
             }
             trans.commit();
-            for (int i = 0; i < r.getDevices().size(); i++) {
-                DeviceDao dao = new DeviceDao();
-                r.getDevices().get(i).setRoom(r);
-                dao.save(r.getDevices().get(i), em);
-            }
             return true;
         } catch (Exception ex) {
             trans.rollback();
             return false;
+        } finally {
+            em.close();
         }
     }
 
-    public boolean delete(Room r) {
+    public boolean delete(HistAction h) {
         EntityManager em = JpaUtil.get().getEntityManager();
         em.getTransaction().begin();
         try {
-            Room room = em.merge(r);
-            em.remove(room);
+            HistAction hist = em.merge(h);
+            em.remove(hist);
             em.getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -72,10 +63,10 @@ public class RoomDao {
         }
     }
 
-    public List<Room> list() {
+    public List<HistAction> list() {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select c from Room as c");
+            Query q = em.createQuery("select c from HistAction as c");
             return q.getResultList();
         } finally {
             em.close();

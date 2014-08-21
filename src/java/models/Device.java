@@ -33,8 +33,6 @@ public class Device implements Serializable {
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
-    @OneToOne
-    private IAction iAction;
     
 
     public Device() {
@@ -102,14 +100,5 @@ public class Device implements Serializable {
     public void setRoom(Room room) {
         this.room = room;
     }
-
-    public IAction getiAction() {
-        return iAction;
-    }
-
-    public void setiAction(IAction iAction) {
-        this.iAction = iAction;
-    }
-    
     
 }

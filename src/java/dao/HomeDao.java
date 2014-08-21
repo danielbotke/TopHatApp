@@ -17,7 +17,7 @@ import utils.JpaUtil;
  */
 public class HomeDao {
 
-    public Home get(long id) {
+    public Home get(int id) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
             return em.find(Home.class, id);
@@ -32,18 +32,17 @@ public class HomeDao {
         trans.begin();
 
         try {
-            
-            for (int i = 0; i < h.getRooms().size(); i++) {
-                RoomDao dao = new RoomDao();
-                h.getRooms().get(i).setHome(h);
-                dao.save(h.getRooms().get(i));
-            }
             if (this.get(h.getId()) == null) {
                 em.persist(h);
             } else {
                 em.merge(h);
             }
             trans.commit();
+            for (int i = 0; i < h.getRooms().size(); i++) {
+                RoomDao dao = new RoomDao();
+                h.getRooms().get(i).setHome(h);
+                dao.save(h.getRooms().get(i), em);
+            }
             return true;
         } catch (Exception ex) {
             trans.rollback();

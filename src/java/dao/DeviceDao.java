@@ -17,7 +17,7 @@ import utils.JpaUtil;
  */
 public class DeviceDao {
 
-    public Device get(long id) {
+    public Device get(int id) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
             return em.find(Device.class, id);
@@ -28,11 +28,17 @@ public class DeviceDao {
 
     public boolean save(Device d) {
         EntityManager em = JpaUtil.get().getEntityManager();
+        Boolean result = this.save(d, em);
+        em.close();
+        return result;
+    }
+
+    public boolean save(Device d, EntityManager em) {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
 
         try {
-            if (d.getId() == 0) {
+            if (this.get(d.getId()) == null) {
                 em.persist(d);
             } else {
                 em.merge(d);
@@ -42,8 +48,6 @@ public class DeviceDao {
         } catch (Exception ex) {
             trans.rollback();
             return false;
-        } finally {
-            em.close();
         }
     }
 
