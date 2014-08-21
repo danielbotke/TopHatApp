@@ -4,17 +4,11 @@
  */
 package bean;
 
-import java.io.BufferedReader;
+import dao.HomeDao;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import models.Device;
 import models.Home;
 import models.Room;
@@ -90,6 +84,8 @@ public class TopHatMB {
             }
 
         }
+        HomeDao dao = new HomeDao();
+        dao.save(bean);
         System.out.println("TopHatBean criado");
 
     }

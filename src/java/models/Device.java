@@ -5,9 +5,13 @@
 package models;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -18,10 +22,20 @@ public class Device implements Serializable {
     @Id
     @GeneratedValue
     private int id;
+    @Column
     private String name;
+    @Column
     private int actionPort;
+    @Column
     private int statusDevice;
+    @Column
     private char type;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
+    @OneToOne
+    private IAction iAction;
+    
 
     public Device() {
     }
@@ -79,6 +93,22 @@ public class Device implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public IAction getiAction() {
+        return iAction;
+    }
+
+    public void setiAction(IAction iAction) {
+        this.iAction = iAction;
     }
     
     

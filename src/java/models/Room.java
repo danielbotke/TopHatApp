@@ -6,9 +6,15 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -17,12 +23,17 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Room implements Serializable {
+
     @Id
     @GeneratedValue
     private int id;
+    @Column
     private String name;
-    @OneToMany
-    private ArrayList<Device> devices = new ArrayList<>();
+    @OneToMany(mappedBy = "room", targetEntity = Device.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Device> devices = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "home_id")
+    private Home home;
 
     public Room() {
     }
@@ -39,11 +50,11 @@ public class Room implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<Device> getDevices() {
+    public List<Device> getDevices() {
         return devices;
     }
 
-    public void setDevices(ArrayList<Device> devices) {
+    public void setDevices(List<Device> devices) {
         this.devices = devices;
     }
 
@@ -53,6 +64,14 @@ public class Room implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Home getHome() {
+        return home;
+    }
+
+    public void setHome(Home home) {
+        this.home = home;
     }
     
 }

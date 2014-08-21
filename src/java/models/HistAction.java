@@ -6,7 +6,9 @@ package models;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -21,11 +23,10 @@ public class HistAction implements Serializable {
     @Id
     @GeneratedValue
     private int id;
+    @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dateTime;
-    @OneToOne
-    private IUser user;
-    @OneToOne
+    @OneToOne(mappedBy = "histAction", fetch = FetchType.LAZY, optional = false)
     private IAction action;
 
     public int getId() {
@@ -44,13 +45,6 @@ public class HistAction implements Serializable {
         this.dateTime = dateTime;
     }
 
-    public IUser getUser() {
-        return user;
-    }
-
-    public void setUser(IUser user) {
-        this.user = user;
-    }
 
     public IAction getAction() {
         return action;

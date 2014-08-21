@@ -5,9 +5,12 @@
 package models;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 
 
@@ -20,10 +23,17 @@ public class IUser implements Serializable {
     @Id
     @GeneratedValue
     private int id;
+    @Column
     private String name;
+    @Column
     private char sex;
+    @Column
     private String email;
+    @Column
     private String tel;
+    @ManyToOne
+    @JoinColumn(name = "home_id")
+    private Home home;
 
     public int getId() {
         return id;
@@ -64,6 +74,15 @@ public class IUser implements Serializable {
     public void setTel(String tel) {
         this.tel = tel;
     }
+
+    public Home getHome() {
+        return home;
+    }
+
+    public void setHome(Home home) {
+        this.home = home;
+    }
+    
     
     
 }

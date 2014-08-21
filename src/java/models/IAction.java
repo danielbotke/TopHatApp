@@ -5,9 +5,13 @@
 package models;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -19,9 +23,12 @@ public class IAction implements Serializable {
     @Id
     @GeneratedValue
     private int id;
+    @Column
     private String toDoAction;
-    @OneToOne
+    @OneToOne(mappedBy = "action", fetch = FetchType.LAZY, optional = false)
     private Device device;
+    @OneToOne
+    private HistAction histAction;
 
     public int getId() {
         return id;
@@ -46,5 +53,15 @@ public class IAction implements Serializable {
     public void setDevice(Device device) {
         this.device = device;
     }
+
+    public HistAction getHistAction() {
+        return histAction;
+    }
+
+    public void setHistAction(HistAction histAction) {
+        this.histAction = histAction;
+    }
+    
+    
     
 }

@@ -6,7 +6,11 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity; 
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -18,17 +22,19 @@ import javax.persistence.OneToMany;
 public class Home implements Serializable {
     @Id
     private int id;
-    @OneToMany
-    private ArrayList<Room> rooms = new ArrayList<>();
-    @OneToMany
-    private ArrayList<IUser> users = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "home", targetEntity = Room.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Room> rooms = new ArrayList<>();
+    @OneToMany(mappedBy = "home", targetEntity = IUser.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<IUser> users = new ArrayList<>();
+    @Column
     private String url;
 
-    public ArrayList<Room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 
-    public void setRooms(ArrayList<Room> rooms) {
+    public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
     }
 
@@ -48,11 +54,11 @@ public class Home implements Serializable {
         this.id = id;
     }
 
-    public ArrayList<IUser> getUsers() {
+    public List<IUser> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<IUser> users) {
+    public void setUsers(List<IUser> users) {
         this.users = users;
     }
     

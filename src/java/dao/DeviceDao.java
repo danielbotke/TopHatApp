@@ -8,40 +8,34 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import models.Home;
+import models.Device;
 import utils.JpaUtil;
 
 /**
  *
  * @author Daniel
  */
-public class HomeDao {
+public class DeviceDao {
 
-    public Home get(long id) {
+    public Device get(long id) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            return em.find(Home.class, id);
+            return em.find(Device.class, id);
         } finally {
             em.close();
         }
     }
 
-    public boolean save(Home h) {
+    public boolean save(Device d) {
         EntityManager em = JpaUtil.get().getEntityManager();
         EntityTransaction trans = em.getTransaction();
         trans.begin();
 
         try {
-            
-            for (int i = 0; i < h.getRooms().size(); i++) {
-                RoomDao dao = new RoomDao();
-                h.getRooms().get(i).setHome(h);
-                dao.save(h.getRooms().get(i));
-            }
-            if (this.get(h.getId()) == null) {
-                em.persist(h);
+            if (d.getId() == 0) {
+                em.persist(d);
             } else {
-                em.merge(h);
+                em.merge(d);
             }
             trans.commit();
             return true;
@@ -53,12 +47,12 @@ public class HomeDao {
         }
     }
 
-    public boolean delete(Home h) {
+    public boolean delete(Device d) {
         EntityManager em = JpaUtil.get().getEntityManager();
         em.getTransaction().begin();
         try {
-            Home home = em.merge(h);
-            em.remove(home);
+            Device device = em.merge(d);
+            em.remove(device);
             em.getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -69,10 +63,10 @@ public class HomeDao {
         }
     }
 
-    public List<Home> list() {
+    public List<Device> list() {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select c from Home as c");
+            Query q = em.createQuery("select c from Device as c");
             return q.getResultList();
         } finally {
             em.close();
