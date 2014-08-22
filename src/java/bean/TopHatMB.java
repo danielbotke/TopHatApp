@@ -54,7 +54,7 @@ public class TopHatMB {
          * new BufferedReader(inputReader); String linha = ""; while ((linha =
          * bufferedReader.readLine()) != null) { aux += linha; }*
          */
-        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
+        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;22;1;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
         // Ao fim deve-se ter a estrutura da resudência retornada pelo Arduino.
         StringTokenizer rooms = new StringTokenizer(aux, "/");
         bean.setId(Integer.parseInt(rooms.nextToken()));

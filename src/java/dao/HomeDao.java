@@ -33,29 +33,41 @@ public class HomeDao {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
         List<Room> rooms = h.getRooms();
+        RoomDao daoRoom = new RoomDao();
+        DeviceDao daoDevice = new DeviceDao();
         for (int i = 0; i < rooms.size(); i++) {
             rooms.get(i).setHome(h);
+            Room r = daoRoom.get(rooms.get(i));
+            if (r != null) {
+                rooms.get(i).setId(r.getId());
+            }
             List<Device> devices = rooms.get(i).getDevices();
             for (int j = 0; j < devices.size(); j++) {
                 devices.get(j).setRoom(rooms.get(i));
+                Device d = daoDevice.get(devices.get(j));
+                if (d != null) {
+                    devices.get(j).setId(d.getId());
+                }
             }
         }
 
-        try {
-            if (this.get(h.getId()) == null) {
-                em.persist(h);
-            } else {
-                em.merge(h);
+            try {
+                if (this.get(h.getId()) == null) {
+                    em.persist(h);
+                } else {
+                    em.merge(h);
+                }
+                trans.commit();
+                return true;
+            } catch (Exception ex) {
+                trans.rollback();
+                return false;
+            } finally {
+                em.close();
             }
-            trans.commit();
-            return true;
-        } catch (Exception ex) {
-            trans.rollback();
-            return false;
-        } finally {
-            em.close();
         }
-    }
+
+    
 
     public boolean delete(Home h) {
         EntityManager em = JpaUtil.get().getEntityManager();

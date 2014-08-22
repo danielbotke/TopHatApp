@@ -17,9 +17,9 @@ import utils.JpaUtil;
  */
 public class DeviceDao {
 
-    public Device get(int roomId, Device d) {
+    public Device get(Device d) {
         EntityManager em = JpaUtil.get().getEntityManager();
-        Query q = em.createQuery("select d from Device d where d.room.id =" + roomId + "and d.name = '" + d.getName() + "'");
+        Query q = em.createQuery("select d from Device d where d.room.id = " + d.getRoom().getId() + " and d.name = '" + d.getName() + "'");
         try {
             if (q.getResultList().size() > 0) {
                 return (Device) q.getResultList().get(0);
@@ -43,10 +43,10 @@ public class DeviceDao {
         trans.begin();
 
         try {
-            if (this.get(d.getRoom().getId(), d) == null) {
+            if (this.get(d) == null) {
                 em.persist(d);
             } else {
-                d.setId((this.get(d.getRoom().getId(), d)).getId());
+                d.setId((this.get(d)).getId());
                 em.merge(d);
             }
             trans.commit();

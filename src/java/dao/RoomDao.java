@@ -17,9 +17,9 @@ import utils.JpaUtil;
  */
 public class RoomDao {
 
-    public Room get(int homeId, Room r) {
+    public Room get(Room r) {
         EntityManager em = JpaUtil.get().getEntityManager();
-        Query q = em.createQuery("select r from Room r where r.home.id =" + homeId + "and r.name = '" + r.getName()+ "'");
+        Query q = em.createQuery("select r from Room r where r.home.id = " + r.getHome().getId() + " and r.name = '" + r.getName()+ "'");
         try {
             if (q.getResultList().size() > 0) {
                 return (Room)q.getResultList().get(0);
@@ -43,10 +43,10 @@ public class RoomDao {
         trans.begin();
 
         try {
-            if (this.get(r.getHome().getId(), r) == null) {
+            if (this.get(r) == null) {
                 em.persist(r);
             } else {
-                r.setId((this.get(r.getHome().getId(), r)).getId());
+                r.setId((this.get(r)).getId());
                 em.merge(r);
             }
             trans.commit();
