@@ -17,10 +17,15 @@ import utils.JpaUtil;
  */
 public class RoomDao {
 
-    public Room get(int id) {
+    public Room get(int homeId, Room r) {
         EntityManager em = JpaUtil.get().getEntityManager();
+        Query q = em.createQuery("select r from Room r where r.home.id =" + homeId + "and r.name = '" + r.getName()+ "'");
         try {
-            return em.find(Room.class, id);
+            if (q.getResultList().size() > 0) {
+                return (Room)q.getResultList().get(0);
+            } else {
+                return null;
+            }
         } finally {
             em.close();
         }
@@ -38,17 +43,13 @@ public class RoomDao {
         trans.begin();
 
         try {
-            if (this.get(r.getId()) == null) {
+            if (this.get(r.getHome().getId(), r) == null) {
                 em.persist(r);
             } else {
+                r.setId((this.get(r.getHome().getId(), r)).getId());
                 em.merge(r);
             }
             trans.commit();
-            for (int i = 0; i < r.getDevices().size(); i++) {
-                DeviceDao dao = new DeviceDao();
-                r.getDevices().get(i).setRoom(r);
-                dao.save(r.getDevices().get(i), em);
-            }
             return true;
         } catch (Exception ex) {
             trans.rollback();

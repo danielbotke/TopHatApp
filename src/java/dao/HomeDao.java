@@ -8,7 +8,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import models.Device;
 import models.Home;
+import models.Room;
 import utils.JpaUtil;
 
 /**
@@ -30,6 +32,14 @@ public class HomeDao {
         EntityManager em = JpaUtil.get().getEntityManager();
         EntityTransaction trans = em.getTransaction();
         trans.begin();
+        List<Room> rooms = h.getRooms();
+        for (int i = 0; i < rooms.size(); i++) {
+            rooms.get(i).setHome(h);
+            List<Device> devices = rooms.get(i).getDevices();
+            for (int j = 0; j < devices.size(); j++) {
+                devices.get(j).setRoom(rooms.get(i));
+            }
+        }
 
         try {
             if (this.get(h.getId()) == null) {
@@ -38,11 +48,6 @@ public class HomeDao {
                 em.merge(h);
             }
             trans.commit();
-            for (int i = 0; i < h.getRooms().size(); i++) {
-                RoomDao dao = new RoomDao();
-                h.getRooms().get(i).setHome(h);
-                dao.save(h.getRooms().get(i), em);
-            }
             return true;
         } catch (Exception ex) {
             trans.rollback();

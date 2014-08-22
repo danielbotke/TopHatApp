@@ -17,10 +17,15 @@ import utils.JpaUtil;
  */
 public class DeviceDao {
 
-    public Device get(int id) {
+    public Device get(int roomId, Device d) {
         EntityManager em = JpaUtil.get().getEntityManager();
+        Query q = em.createQuery("select d from Device d where d.room.id =" + roomId + "and d.name = '" + d.getName() + "'");
         try {
-            return em.find(Device.class, id);
+            if (q.getResultList().size() > 0) {
+                return (Device) q.getResultList().get(0);
+            } else {
+                return null;
+            }
         } finally {
             em.close();
         }
@@ -38,9 +43,10 @@ public class DeviceDao {
         trans.begin();
 
         try {
-            if (this.get(d.getId()) == null) {
+            if (this.get(d.getRoom().getId(), d) == null) {
                 em.persist(d);
             } else {
+                d.setId((this.get(d.getRoom().getId(), d)).getId());
                 em.merge(d);
             }
             trans.commit();
