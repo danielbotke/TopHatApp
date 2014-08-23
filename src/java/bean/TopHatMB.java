@@ -4,7 +4,9 @@
  */
 package bean;
 
+import dao.DeviceDao;
 import dao.HomeDao;
+import dao.RoomDao;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.StringTokenizer;
@@ -39,8 +41,6 @@ public class TopHatMB {
         this.currentRoom = currentRoom;
     }
 
-    
-
     /**
      * Creates a new instance of TopHatMB
      */
@@ -54,16 +54,26 @@ public class TopHatMB {
          * new BufferedReader(inputReader); String linha = ""; while ((linha =
          * bufferedReader.readLine()) != null) { aux += linha; }*
          */
-        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;22;1;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
+        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;1;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
         // Ao fim deve-se ter a estrutura da resudência retornada pelo Arduino.
         StringTokenizer rooms = new StringTokenizer(aux, "/");
         bean.setId(Integer.parseInt(rooms.nextToken()));
+        RoomDao daoRoom = new RoomDao();
+        DeviceDao daoDevice = new DeviceDao();
+        Room r = null;
+        Device d = null;
+        Device createdDevice;
         while (rooms.hasMoreElements()) {
             StringTokenizer devices = new StringTokenizer(rooms.nextToken(), ";");
             while (devices.hasMoreElements()) {
                 String nxt = devices.nextToken();
                 if (nxt.length() > 1) {
                     createdRoom = new Room(nxt);
+                    createdRoom.setHome(bean);
+                    r = daoRoom.get(createdRoom);
+                    if (r != null) {
+                        createdRoom.setId(r.getId());
+                    }
                     bean.getRooms().add(createdRoom);
                 } else if (createdRoom != null) {
                     switch (nxt) {
@@ -79,6 +89,12 @@ public class TopHatMB {
                         default:
                             System.out.println("Dispositivo não reconhecido");
                             break;
+                    }
+                    createdDevice = createdRoom.getDevices().get(createdRoom.getDevices().size() - 1);
+                    createdDevice.setRoom(createdRoom);
+                    d = daoDevice.get(createdDevice);
+                    if (d != null) {
+                        createdDevice.setId(d.getId());
                     }
                 }
 

@@ -32,6 +32,7 @@ public class HomeDao {
         EntityManager em = JpaUtil.get().getEntityManager();
         EntityTransaction trans = em.getTransaction();
         trans.begin();
+        /**
         List<Room> rooms = h.getRooms();
         RoomDao daoRoom = new RoomDao();
         DeviceDao daoDevice = new DeviceDao();
@@ -49,7 +50,7 @@ public class HomeDao {
                     devices.get(j).setId(d.getId());
                 }
             }
-        }
+        }*/
 
             try {
                 if (this.get(h.getId()) == null) {
