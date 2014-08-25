@@ -5,14 +5,18 @@
 package bean;
 
 import dao.DeviceDao;
+import dao.HistActionDao;
 import dao.HomeDao;
 import dao.RoomDao;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
 import models.Device;
+import models.HistAction;
 import models.Home;
+import models.IAction;
 import models.Room;
 
 /**
@@ -54,7 +58,7 @@ public class TopHatMB {
          * new BufferedReader(inputReader); String linha = ""; while ((linha =
          * bufferedReader.readLine()) != null) { aux += linha; }*
          */
-        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;1;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
+        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
         // Ao fim deve-se ter a estrutura da resudência retornada pelo Arduino.
         StringTokenizer rooms = new StringTokenizer(aux, "/");
         bean.setId(Integer.parseInt(rooms.nextToken()));
@@ -115,5 +119,14 @@ public class TopHatMB {
             }
         }
         return "";
+    }
+    
+    public void addHistAction(String action, Device d){
+        HistAction hist = new HistAction();
+        hist.setHome(bean);
+        hist.setDateTime(new Date());
+        hist.setAction(new IAction(action, d, hist));
+        HistActionDao histActDao = new HistActionDao();
+        histActDao.save(hist);
     }
 }

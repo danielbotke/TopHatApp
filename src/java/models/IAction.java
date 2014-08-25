@@ -23,11 +23,17 @@ public class IAction implements Serializable {
     @GeneratedValue
     private int id;
     @Column
-    private String toDoAction;
+    private String name;
     @OneToOne @MapsId
     private Device device;
     @OneToOne
     private HistAction histAction;
+
+    public IAction(String name, Device device, HistAction histAction) {
+        this.name = name;
+        this.device = device;
+        this.histAction = histAction;
+    }
 
     public int getId() {
         return id;
@@ -37,12 +43,12 @@ public class IAction implements Serializable {
         this.id = id;
     }
 
-    public String getToDoAction() {
-        return toDoAction;
+    public String getName() {
+        return name;
     }
 
-    public void setToDoAction(String toDoAction) {
-        this.toDoAction = toDoAction;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Device getDevice() {

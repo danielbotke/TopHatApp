@@ -23,11 +23,11 @@
                 <c:if test="#{device.type == 'l'}">
                     <p:panel header="Light" toggleable="true">
                         <c:choose>
-                            <c:when test="#{device.statusDevice == 0}">
-                                <a href="#{topHatMB.bean.url}/?l#{device.actionPort}">Turn on</a>
+                            <c:when test="#{device.statusDevice == 0}">    
+                                <a href="#{topHatMB.bean.url}/?l#{device.actionPort}" >Turn on</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="#{topHatMB.bean.url}/?d#{device.actionPort}">Turn off</a>
+                                <a href="#{topHatMB.bean.url}/?d#{device.actionPort}" >Turn off</a>
                             </c:otherwise>
                         </c:choose>
                     </p:panel>

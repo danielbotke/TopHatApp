@@ -27,6 +27,8 @@ public class Home implements Serializable {
     private List<Room> rooms = new ArrayList<>();
     @OneToMany(mappedBy = "home", targetEntity = IUser.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<IUser> users = new ArrayList<>();
+    @OneToMany(mappedBy = "home", targetEntity = HistAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HistAction> histAction = new ArrayList<>();
     @Column
     private String url;
 

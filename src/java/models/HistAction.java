@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
@@ -28,6 +30,9 @@ public class HistAction implements Serializable {
     private Date dateTime;
     @OneToOne(mappedBy = "histAction", fetch = FetchType.LAZY, optional = false)
     private IAction action;
+    @ManyToOne
+    @JoinColumn(name = "home_id")
+    private Home home;
 
     public int getId() {
         return id;
@@ -52,6 +57,14 @@ public class HistAction implements Serializable {
 
     public void setAction(IAction action) {
         this.action = action;
+    }
+
+    public Home getHome() {
+        return home;
+    }
+
+    public void setHome(Home home) {
+        this.home = home;
     }
     
     
