@@ -7,17 +7,26 @@ package bean;
 import dao.DeviceDao;
 import dao.HistActionDao;
 import dao.HomeDao;
+import dao.IUserDao;
 import dao.RoomDao;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import models.Device;
 import models.HistAction;
 import models.Home;
 import models.IAction;
+import models.IUser;
 import models.Room;
+import org.brickred.socialauth.Profile;
+import org.omnifaces.util.Faces;
 
 /**
  *
@@ -25,22 +34,23 @@ import models.Room;
  */
 @ManagedBean(name = "topHatMB")
 public class TopHatMB {
-
+    
     private Home bean = new Home();
     private Room currentRoom = null;
-
+    private IUser user;
+    
     public Home getBean() {
         return bean;
     }
-
+    
     public void setBean(Home bean) {
         this.bean = bean;
     }
-
+    
     public Room getCurrentRoom() {
         return currentRoom;
     }
-
+    
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
@@ -51,14 +61,31 @@ public class TopHatMB {
     public TopHatMB() throws MalformedURLException, IOException {
         Room createdRoom = null;
         String aux = "";
-        /**
-         * URL url = new URL("https://www.google.com.br/"); // cria um stream de
-         * entrada do conteúdo InputStreamReader inputReader = new
-         * InputStreamReader(url.openStream()); BufferedReader bufferedReader =
-         * new BufferedReader(inputReader); String linha = ""; while ((linha =
-         * bufferedReader.readLine()) != null) { aux += linha; }*
-         */
-        aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        Object userSession = session.getAttribute("userSession");
+        if ((userSession != null) && (userSession instanceof UserSessionBean)) {
+            Profile profile = ((UserSessionBean) userSession).getProfile();
+            IUserDao userDao = new IUserDao();
+            user = userDao.getFacebookId(profile.getValidatedId());
+            if (user != null) {
+                bean = user.getHome();
+            } else {
+                bean.setIp(Faces.getRemoteAddr());
+                bean.getUsers().add(user);
+            }
+        }
+        
+        URL url = new URL("https://" + bean.getIp() + ":9898");
+        // cria um stream de entrada do conteúdo 
+        InputStreamReader inputReader = new InputStreamReader(url.openStream());
+        BufferedReader bufferedReader = new BufferedReader(inputReader);
+        String linha = "";
+        while ((linha = bufferedReader.readLine()) != null) {
+            aux += linha;
+        }
+        
+        //aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
         // Ao fim deve-se ter a estrutura da resudência retornada pelo Arduino.
         StringTokenizer rooms = new StringTokenizer(aux, "/");
         bean.setId(Integer.parseInt(rooms.nextToken()));
@@ -101,16 +128,16 @@ public class TopHatMB {
                         createdDevice.setId(d.getId());
                     }
                 }
-
+                
             }
-
+            
         }
         HomeDao dao = new HomeDao();
         dao.save(bean);
         System.out.println("TopHatBean criado");
-
+        
     }
-
+    
     public String selectRoom(String room) {
         for (int i = 0; i < bean.getRooms().size(); i++) {
             if ((bean.getRooms().get(i).getName()).equalsIgnoreCase(room)) {
@@ -121,12 +148,14 @@ public class TopHatMB {
         return "";
     }
     
-    public void addHistAction(String action, Device d){
+    public void addHistAction(String action, Device d) throws MalformedURLException, IOException {
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
         hist.setAction(new IAction(action, d, hist));
         HistActionDao histActDao = new HistActionDao();
         histActDao.save(hist);
+        URL url = new URL("http://" + bean.getIp() +":9898/?" + action + d.getActionPort());
+        url.openConnection();
     }
 }

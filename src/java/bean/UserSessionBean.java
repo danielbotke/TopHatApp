@@ -51,6 +51,7 @@ public class UserSessionBean implements Serializable {
         String authenticationURL;
         authenticationURL = manager.getAuthenticationUrl(providerID, successURL);
         FacesContext.getCurrentInstance().getExternalContext().redirect(authenticationURL);
+        this.pullUserInfo();
     }
 
     public void pullUserInfo() {

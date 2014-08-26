@@ -66,8 +66,23 @@ public class IUserDao {
     public List<IUser> list() {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select c from IUser as c");
+            Query q = em.createQuery("select u from IUser as u");
             return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public IUser getFacebookId(String facebookId) {
+        EntityManager em = JpaUtil.get().getEntityManager();
+        try {
+            Query q = em.createQuery("select u from IUser as u where u.facebookId = " + facebookId);
+            List result = q.getResultList();
+            if(result != null){
+                return (IUser)result.get(0);
+            }else{
+                return null;
+            }
         } finally {
             em.close();
         }

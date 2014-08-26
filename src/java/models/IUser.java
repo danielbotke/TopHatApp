@@ -31,6 +31,8 @@ public class IUser implements Serializable {
     private String email;
     @Column
     private String tel;
+    @Column
+    private String facebookId;
     @ManyToOne
     @JoinColumn(name = "home_id")
     private Home home;
@@ -82,7 +84,13 @@ public class IUser implements Serializable {
     public void setHome(Home home) {
         this.home = home;
     }
-    
-    
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
     
 }

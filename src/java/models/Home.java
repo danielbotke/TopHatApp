@@ -30,7 +30,7 @@ public class Home implements Serializable {
     @OneToMany(mappedBy = "home", targetEntity = HistAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HistAction> histAction = new ArrayList<>();
     @Column
-    private String url;
+    private String ip;
 
     public List<Room> getRooms() {
         return rooms;
@@ -40,12 +40,12 @@ public class Home implements Serializable {
         this.rooms = rooms;
     }
 
-    public String getUrl() {
-        return url;
+    public String getIp() {
+        return ip;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public int getId() {
