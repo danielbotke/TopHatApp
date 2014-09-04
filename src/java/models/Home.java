@@ -29,6 +29,8 @@ public class Home implements Serializable {
     private List<IUser> users = new ArrayList<>();
     @OneToMany(mappedBy = "home", targetEntity = HistAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HistAction> histAction = new ArrayList<>();
+    @OneToMany(mappedBy = "home", targetEntity = ToDoAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ToDoAction> toDoAction = new ArrayList<>();
     @Column
     private String ip;
 
@@ -63,6 +65,23 @@ public class Home implements Serializable {
     public void setUsers(List<IUser> users) {
         this.users = users;
     }
+
+    public List<HistAction> getHistAction() {
+        return histAction;
+    }
+
+    public void setHistAction(List<HistAction> histAction) {
+        this.histAction = histAction;
+    }
+
+    public List<ToDoAction> getToDoAction() {
+        return toDoAction;
+    }
+
+    public void setToDoAction(List<ToDoAction> toDoAction) {
+        this.toDoAction = toDoAction;
+    }
+    
     
     
 }

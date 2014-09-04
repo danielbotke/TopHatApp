@@ -9,6 +9,7 @@ import dao.HistActionDao;
 import dao.HomeDao;
 import dao.IUserDao;
 import dao.RoomDao;
+import dao.ToDoActionDao;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -157,5 +158,11 @@ public class TopHatMB {
         histActDao.save(hist);
         URL url = new URL("http://" + bean.getIp() +":9898/?" + action + d.getActionPort());
         url.openConnection();
+    }
+    
+    public void activateTodoAction(int actionId){
+        ToDoActionDao dao = new ToDoActionDao();
+        bean.getToDoAction().get(actionId).setActivated(Boolean.TRUE);
+        dao.save(bean.getToDoAction().get(actionId));
     }
 }

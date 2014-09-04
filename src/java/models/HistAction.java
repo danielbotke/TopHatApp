@@ -25,13 +25,13 @@ public class HistAction implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable=false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dateTime;
     @OneToOne(mappedBy = "histAction", fetch = FetchType.LAZY, optional = false)
     private IAction action;
     @ManyToOne
-    @JoinColumn(name = "home_id")
+    @JoinColumn(name = "home_id", nullable=false)
     private Home home;
 
     public int getId() {

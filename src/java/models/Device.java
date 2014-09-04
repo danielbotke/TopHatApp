@@ -21,16 +21,16 @@ public class Device implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable=false)
     private String name;
     @Column
     private int actionPort;
     @Column
     private int statusDevice;
-    @Column
+    @Column(nullable=false)
     private char type;
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable=false)
     private Room room;
     
 

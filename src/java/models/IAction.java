@@ -7,7 +7,6 @@ package models;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
@@ -19,15 +18,22 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class IAction implements Serializable {
+
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @OneToOne @MapsId
+    @OneToOne
+    @MapsId
     private Device device;
     @OneToOne
     private HistAction histAction;
+    @OneToOne
+    private ToDoAction toDoAction;
+
+    public IAction() {
+    }
 
     public IAction(String name, Device device, HistAction histAction) {
         this.name = name;
@@ -66,7 +72,13 @@ public class IAction implements Serializable {
     public void setHistAction(HistAction histAction) {
         this.histAction = histAction;
     }
-    
-    
+
+    public ToDoAction getToDoAction() {
+        return toDoAction;
+    }
+
+    public void setToDoAction(ToDoAction toDoAction) {
+        this.toDoAction = toDoAction;
+    }
     
 }

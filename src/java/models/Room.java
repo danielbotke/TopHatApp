@@ -27,12 +27,12 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(nullable=false)
     private String name;
     @OneToMany(mappedBy = "room", targetEntity = Device.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Device> devices = new ArrayList<>();
     @ManyToOne
-    @JoinColumn(name = "home_id")
+    @JoinColumn(name = "home_id", nullable=false)
     private Home home;
 
     public Room() {
