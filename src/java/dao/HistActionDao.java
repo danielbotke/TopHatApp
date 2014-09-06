@@ -4,6 +4,7 @@
  */
 package dao;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -67,6 +68,15 @@ public class HistActionDao {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
             Query q = em.createQuery("select c from HistAction as c");
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    public List<HistAction> listPeriod(Date dataIni, Date dataEnd, String action) {
+        EntityManager em = JpaUtil.get().getEntityManager();
+        try {
+            Query q = em.createQuery("select h from HistAction as h where h.dateTime BETWEEN :dataIni AND :dataEnd and h.action.name = :action");
             return q.getResultList();
         } finally {
             em.close();
