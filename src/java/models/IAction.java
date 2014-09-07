@@ -32,13 +32,12 @@ public class IAction implements Serializable {
     @OneToOne
     private ToDoAction toDoAction;
 
-    public IAction() {
-    }
-
-    public IAction(String name, Device device, HistAction histAction) {
+    public IAction(String name, Device device) {
         this.name = name;
         this.device = device;
-        this.histAction = histAction;
+    }
+    
+    public IAction() {
     }
 
     public int getId() {

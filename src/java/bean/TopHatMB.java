@@ -153,7 +153,7 @@ public class TopHatMB {
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
-        hist.setAction(new IAction(action, d, hist));
+        hist.setAction(new IAction(action, d));
         HistActionDao histActDao = new HistActionDao();
         histActDao.save(hist);
         URL url = new URL("http://" + bean.getIp() +":9898/?" + action + d.getActionPort());

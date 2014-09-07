@@ -37,6 +37,17 @@ public class ToDoAction implements Serializable {
     @Column(nullable = false)
     private Boolean activated;
 
+    public ToDoAction(Date dateTime, IAction action, Home home, Boolean activated) {
+        this.dateTime = dateTime;
+        this.action = action;
+        this.home = home;
+        this.activated = activated;
+    }
+
+    public ToDoAction() {
+    }
+       
+
     public int getId() {
         return id;
     }

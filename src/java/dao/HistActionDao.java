@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import models.Device;
 import models.HistAction;
 import utils.JpaUtil;
 
@@ -73,10 +74,10 @@ public class HistActionDao {
             em.close();
         }
     }
-    public List<HistAction> listPeriod(Date dataIni, Date dataEnd, String action) {
+    public List<HistAction> listPeriod(Date dataIni, Date dataEnd, String action, Device dev) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select h from HistAction as h where h.dateTime BETWEEN :dataIni AND :dataEnd and h.action.name = :action");
+            Query q = em.createQuery("select h from HistAction as h where h.dateTime BETWEEN :dataIni AND :dataEnd and h.action.name = :action and h.action.device.id = :dev");
             return q.getResultList();
         } finally {
             em.close();
