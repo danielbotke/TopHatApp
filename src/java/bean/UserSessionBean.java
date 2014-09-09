@@ -1,7 +1,5 @@
 package bean;
 
-
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -17,7 +15,6 @@ import org.brickred.socialauth.SocialAuthConfig;
 import org.brickred.socialauth.SocialAuthManager;
 import org.brickred.socialauth.util.Base64.InputStream;
 import org.brickred.socialauth.util.SocialAuthUtil;
-
 
 @Named(value = "userSession")
 @SessionScoped
@@ -47,11 +44,24 @@ public class UserSessionBean implements Serializable {
         manager.setSocialAuthConfig(config);
         // 'successURL' is the page you'll be redirected to on successful login
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String successURL = "http://localhost:8080/"+externalContext.getRequestContextPath() + "/faces/home.xhtml";
+        String successURL = "http://localhost:8080/" + externalContext.getRequestContextPath() + "/faces/home.xhtml";
         String authenticationURL;
         authenticationURL = manager.getAuthenticationUrl(providerID, successURL);
         FacesContext.getCurrentInstance().getExternalContext().redirect(authenticationURL);
         this.pullUserInfo();
+        ExternalContext ec;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext == null) {
+            ec = null;
+        } else {
+            ec = facesContext.getExternalContext();
+        }
+        if (ec != null) {
+            Map attrMap = ec.getSessionMap();
+            if (attrMap != null) {
+                attrMap.put("userSession", this);
+            }
+        }
     }
 
     public void pullUserInfo() {
@@ -89,9 +99,9 @@ public class UserSessionBean implements Serializable {
             System.out.println("UserSessionBean - IOException: " + ex.toString());
         }
     }
-    
-    public void teste() throws IOException{
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();     
+
+    public void teste() throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().redirect(externalContext.getRequestContextPath() + "home.xhtml");
     }
 
@@ -126,45 +136,43 @@ public class UserSessionBean implements Serializable {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
-    
+
     /**
- * Loads the application configuration from the given input stream Format of
- * the input stream should be as follows: <br/>
- * www.google.com.consumer_key = opensource.brickred.com
- * 
- * @param inputStream
- *            property file input stream which contains the configuration.
- * @throws Exception
- */
-public void load(final InputStream inputStream) throws Exception { 
-}
+     * Loads the application configuration from the given input stream Format of
+     * the input stream should be as follows: <br/> www.google.com.consumer_key
+     * = opensource.brickred.com
+     *
+     * @param inputStream property file input stream which contains the
+     * configuration.
+     * @throws Exception
+     */
+    public void load(final InputStream inputStream) throws Exception {
+    }
 
-/**
- * Loads the application configuration from the given file
- * 
- * @param fileName
- *            the file name which contains the application configuration
- *            properties
- * @throws Exception
- */
-public void load(final String fileName) throws Exception { 
-}
+    /**
+     * Loads the application configuration from the given file
+     *
+     * @param fileName the file name which contains the application
+     * configuration properties
+     * @throws Exception
+     */
+    public void load(final String fileName) throws Exception {
+    }
 
-/**
- * Loads the application properties from oauth_consumer.properties file.
- * 
- * @throws Exception
- */
-public void load() throws Exception { 
-}
+    /**
+     * Loads the application properties from oauth_consumer.properties file.
+     *
+     * @throws Exception
+     */
+    public void load() throws Exception {
+    }
 
-/**
- * Loads the application configuration from the given properties
- * 
- * @param properties
- *            application configuration properties
- * @throws Exception
- */
-public void load(final Properties properties) throws Exception { 
-}
+    /**
+     * Loads the application configuration from the given properties
+     *
+     * @param properties application configuration properties
+     * @throws Exception
+     */
+    public void load(final Properties properties) throws Exception {
+    }
 }
