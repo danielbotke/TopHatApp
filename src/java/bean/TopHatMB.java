@@ -63,7 +63,7 @@ public class TopHatMB {
         Room createdRoom = null;
         String aux = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         Object userSession = session.getAttribute("userSession");
         if ((userSession != null) && (userSession instanceof UserSessionBean)) {
             Profile profile = ((UserSessionBean) userSession).getProfile();

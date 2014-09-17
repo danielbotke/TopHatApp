@@ -6,11 +6,13 @@ package com.ws.tophat.home;
 
 import dao.HomeDao;
 import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import javax.jws.WebService;
+import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import models.Home;
 
 /**
