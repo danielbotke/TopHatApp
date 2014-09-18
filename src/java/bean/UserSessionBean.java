@@ -2,72 +2,84 @@ package bean;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.brickred.socialauth.AuthProvider;
 import org.brickred.socialauth.Profile;
 import org.brickred.socialauth.SocialAuthConfig;
 import org.brickred.socialauth.SocialAuthManager;
 import org.brickred.socialauth.util.SocialAuthUtil;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ManagedBean(name = "userSession")
 @SessionScoped
 public class UserSessionBean implements Serializable {
-    
-    private SocialAuthManager manager;
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private SocialAuthManager manager;
     private String originalURL;
     private String providerID;
     private Profile profile;
-    
+    private Logger logger = LoggerFactory.getLogger(UserSessionBean.class);
+
     public UserSessionBean() {
         //... 
     }
-    
+
     public void socialConnect(String providerIDSelected) throws Exception {
-        setProviderID(providerIDSelected);
-        // Put your keys and secrets from the providers here
-        SocialAuthConfig config = SocialAuthConfig.getDefault();        
-        String propUrl = "oauth_consumer.properties";
-        config.load(propUrl);
-        manager = new SocialAuthManager();
-        manager.setSocialAuthConfig(config);
-        // 'successURL' is the page you'll be redirected to on successful login
-        String successURL = "http://tophat.com.br/TopHatApp/faces/home.xhtml";
-        String authenticationURL;
-        authenticationURL = manager.getAuthenticationUrl(providerID, successURL);
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("authManager", manager);        
-        FacesContext.getCurrentInstance().responseComplete();
-        FacesContext.getCurrentInstance().getExternalContext().redirect(authenticationURL);
-        this.pullUserInfo();
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("userSession", this);
+    	  this.setProviderID(providerIDSelected);
+    	  System.out.println(providerID);
+    	  //Create an instance of SocialAuthConfgi object
+    	   SocialAuthConfig config = SocialAuthConfig.getDefault();
+
+    	  //load configuration. By default load the configuration from oauth_consumer.properties. 
+    	  //You can also pass input stream, properties object or properties file name.
+    	   config.load();
+
+    	  //Create an instance of SocialAuthManager and set config
+    	  SocialAuthManager manager = new SocialAuthManager();
+    	  manager.setSocialAuthConfig(config);
+
+    	  // URL of YOUR application which will be called after authentication
+    	  String successUrl= "http://tophat.com.br/TopHatApp/home.jsf";
+
+    	  // get Provider URL to which you should redirect for authentication.
+    	  // id can have values "facebook", "twitter", "yahoo" etc. or the OpenID URL
+    	  String url = manager.getAuthenticationUrl(providerID, successUrl);
+    	  
+
+    	  // Store in session
+    	  HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+    	  session.setAttribute("authManager", manager);
+    	  FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+    	  session.setAttribute("userSession", this);
     }
-    
+
     public void pullUserInfo() throws Exception {
-        try {
-            // Pull user's data from the provider
-            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-            HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-            Map map = SocialAuthUtil.getRequestParametersMap(request);
-            if (this.manager != null) {
-                AuthProvider provider = manager.connect(map);
-                this.profile = provider.getUserProfile();
-                // Do what you want with the data (e.g. persist to the database, etc.)
-                System.out.println("User's Social profile: " + profile);
-                // Redirect the user back to where they have been before logging in
-                FacesContext.getCurrentInstance().getExternalContext().redirect(originalURL);
-            } else {
-                FacesContext.getCurrentInstance().getExternalContext().redirect(externalContext.getRequestContextPath() + "home.xhtml");
-            }
-        } catch (Exception ex) {
-            throw ex;
-        }
+        // Pull user's data from the provider
+    	  // get the social auth manager from session
+    	  HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    	  HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+    	  SocialAuthManager manager = (SocialAuthManager)session.getAttribute("authManager");
+
+    	  // call connect method of manager which returns the provider object. 
+    	  // Pass request parameter map while calling connect method. 
+    	   AuthProvider provider = manager.connect(SocialAuthUtil.getRequestParametersMap(request));
+
+    	  // get profile
+    	  profile = provider.getUserProfile();
+
+    	  session.setAttribute("userSession", this);
     }
-    
+
     public void logOut() {
         try {
             // Disconnect from the provider
@@ -114,6 +126,4 @@ public class UserSessionBean implements Serializable {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
-    
-    
 }

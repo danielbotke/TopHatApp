@@ -28,6 +28,8 @@ import models.IUser;
 import models.Room;
 import org.brickred.socialauth.Profile;
 import org.omnifaces.util.Faces;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -39,6 +41,7 @@ public class TopHatMB {
     private Home bean = new Home();
     private Room currentRoom = null;
     private IUser user;
+    private Logger logger = LoggerFactory.getLogger(TopHatMB.class);
     
     public Home getBean() {
         return bean;
@@ -58,15 +61,18 @@ public class TopHatMB {
 
     /**
      * Creates a new instance of TopHatMB
+     * @throws Exception 
      */
-    public TopHatMB() throws MalformedURLException, IOException {
+    public TopHatMB() throws Exception {
         Room createdRoom = null;
         String aux = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        Object userSession = session.getAttribute("userSession");
-        if ((userSession != null) && (userSession instanceof UserSessionBean)) {
-            Profile profile = ((UserSessionBean) userSession).getProfile();
+        UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
+        userSession.pullUserInfo();
+        userSession = (UserSessionBean) session.getAttribute("userSession");
+        if (userSession != null) {
+            Profile profile = userSession.getProfile();
             IUserDao userDao = new IUserDao();
             user = userDao.getFacebookId(profile.getValidatedId());
             if (user != null) {
@@ -78,7 +84,7 @@ public class TopHatMB {
         }
         
         URL url = new URL("https://" + bean.getIp() + ":9898");
-        // cria um stream de entrada do conteúdo 
+        // cria um stream de entrada do conteÃºdo 
         InputStreamReader inputReader = new InputStreamReader(url.openStream());
         BufferedReader bufferedReader = new BufferedReader(inputReader);
         String linha = "";
@@ -87,7 +93,7 @@ public class TopHatMB {
         }
         
         //aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
-        // Ao fim deve-se ter a estrutura da resudência retornada pelo Arduino.
+        // Ao fim deve-se ter a estrutura da resudÃªncia retornada pelo Arduino.
         StringTokenizer rooms = new StringTokenizer(aux, "/");
         bean.setId(Integer.parseInt(rooms.nextToken()));
         RoomDao daoRoom = new RoomDao();
@@ -119,7 +125,7 @@ public class TopHatMB {
                             createdRoom.getDevices().add(new Device("Air conditioner", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
                             break;
                         default:
-                            System.out.println("Dispositivo não reconhecido");
+                            System.out.println("Dispositivo nÃ£o reconhecido");
                             break;
                     }
                     createdDevice = createdRoom.getDevices().get(createdRoom.getDevices().size() - 1);
