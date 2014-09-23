@@ -21,7 +21,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Home implements Serializable {
     @Id
-    private int id;
+    private String id;
     
     @OneToMany(mappedBy = "home", targetEntity = Room.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
@@ -50,11 +50,11 @@ public class Home implements Serializable {
         this.ip = ip;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

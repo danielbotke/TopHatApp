@@ -4,19 +4,13 @@
  */
 package bean;
 
-import dao.DeviceDao;
 import dao.HistActionDao;
-import dao.HomeDao;
 import dao.IUserDao;
-import dao.RoomDao;
 import dao.ToDoActionDao;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -27,7 +21,6 @@ import models.IAction;
 import models.IUser;
 import models.Room;
 import org.brickred.socialauth.Profile;
-import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,85 +57,22 @@ public class TopHatMB {
      * @throws Exception 
      */
     public TopHatMB() throws Exception {
-        Room createdRoom = null;
-        String aux = "";
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
         userSession.pullUserInfo();
         userSession = (UserSessionBean) session.getAttribute("userSession");
         if (userSession != null) {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("http://tophat.tcc.br/TopHatApp/newUser.jsf");
             Profile profile = userSession.getProfile();
             IUserDao userDao = new IUserDao();
             user = userDao.getFacebookId(profile.getValidatedId());
-            if (user != null) {
+            if (user == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("http://tophat.tcc.br/TopHatApp/newUser.jsf");
+            }else{
                 bean = user.getHome();
-            } else {
-                bean.setIp(Faces.getRemoteAddr());
-                bean.getUsers().add(user);
             }
         }
-        
-        URL url = new URL("https://" + bean.getIp() + ":9898");
-        // cria um stream de entrada do conteÃºdo 
-        InputStreamReader inputReader = new InputStreamReader(url.openStream());
-        BufferedReader bufferedReader = new BufferedReader(inputReader);
-        String linha = "";
-        while ((linha = bufferedReader.readLine()) != null) {
-            aux += linha;
-        }
-        
-        //aux = "2/Kitchen;l;9;1;w;13;1/Living;l;10;0;w;14;1/Bad1;l;11;0;w;15;1/Bad2;l;12;1;w;16;0";
-        // Ao fim deve-se ter a estrutura da resudÃªncia retornada pelo Arduino.
-        StringTokenizer rooms = new StringTokenizer(aux, "/");
-        bean.setId(Integer.parseInt(rooms.nextToken()));
-        RoomDao daoRoom = new RoomDao();
-        DeviceDao daoDevice = new DeviceDao();
-        Room r = null;
-        Device d = null;
-        Device createdDevice;
-        while (rooms.hasMoreElements()) {
-            StringTokenizer devices = new StringTokenizer(rooms.nextToken(), ";");
-            while (devices.hasMoreElements()) {
-                String nxt = devices.nextToken();
-                if (nxt.length() > 1) {
-                    createdRoom = new Room(nxt);
-                    createdRoom.setHome(bean);
-                    r = daoRoom.get(createdRoom);
-                    if (r != null) {
-                        createdRoom.setId(r.getId());
-                    }
-                    bean.getRooms().add(createdRoom);
-                } else if (createdRoom != null) {
-                    switch (nxt) {
-                        case "l":
-                            createdRoom.getDevices().add(new Device("Light", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
-                            break;
-                        case "w":
-                            createdRoom.getDevices().add(new Device("Window", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
-                            break;
-                        case "a":
-                            createdRoom.getDevices().add(new Device("Air conditioner", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
-                            break;
-                        default:
-                            System.out.println("Dispositivo nÃ£o reconhecido");
-                            break;
-                    }
-                    createdDevice = createdRoom.getDevices().get(createdRoom.getDevices().size() - 1);
-                    createdDevice.setRoom(createdRoom);
-                    d = daoDevice.get(createdDevice);
-                    if (d != null) {
-                        createdDevice.setId(d.getId());
-                    }
-                }
-                
-            }
-            
-        }
-        HomeDao dao = new HomeDao();
-        dao.save(bean);
-        System.out.println("TopHatBean criado");
-        
     }
     
     public String selectRoom(String room) {

@@ -26,11 +26,9 @@ public class IUser implements Serializable {
     @Column
     private String name;
     @Column
-    private char sex;
+    private String sex;
     @Column
     private String email;
-    @Column
-    private String tel;
     @Column
     private String facebookId;
     @ManyToOne
@@ -53,28 +51,20 @@ public class IUser implements Serializable {
         this.name = name;
     }
 
-    public char getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(char sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
-
+    
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
     }
 
     public Home getHome() {

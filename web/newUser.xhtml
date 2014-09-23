@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <ui:composition template="/template.xhtml">
+        <h1>Vemos que você é novo por aqui</h1>
+        <h:form>
+            <h:outputLabel id="homeId" value="Informe o código de sua residência"></h:outputLabel>
+            <h:inputText value="#{homeMB.bean.id}"></h:inputText>
+            <h:commandButton value="Confirmar" action="#{homeMB.addUser()}"></h:commandButton>
+        </h:form>
+    </ui:composition>
+</html>
+

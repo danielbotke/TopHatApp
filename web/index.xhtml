@@ -7,7 +7,7 @@
     <head>
         <title> TopHat Automação </title>
     </head>
-    <body>
+    <body onload="#{main.UDPListener()}">
         <f:view>
             <ui:param name="originalURL" value="#{request.requestURI}?#{request.queryString}" />
             <f:metadata>

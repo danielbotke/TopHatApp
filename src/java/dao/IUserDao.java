@@ -78,7 +78,7 @@ public class IUserDao {
         try {
             Query q = em.createQuery("select u from IUser as u where u.facebookId = " + facebookId);
             List result = q.getResultList();
-            if(result != null){
+            if(result != null && result.size() > 0){
                 return (IUser)result.get(0);
             }else{
                 return null;
