@@ -19,7 +19,10 @@ public class RoomDao {
 
     public Room get(Room r) {
         EntityManager em = JpaUtil.get().getEntityManager();
-        Query q = em.createQuery("select r from Room r where r.home.id = " + r.getHome().getId() + " and r.name = '" + r.getName()+ "'");
+        if(r.getHome().getId() == null){
+            return null;
+        }
+        Query q = em.createQuery("select r from Room r where r.home.id = '" + r.getHome().getId() + "' and r.name = '" + r.getName()+ "'");
         try {
             if (q.getResultList().size() > 0) {
                 return (Room)q.getResultList().get(0);

@@ -1,10 +1,17 @@
 
 import bean.TopHatMB;
+import dao.DeviceDao;
+import dao.HomeDao;
+import dao.RoomDao;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
+import models.Device;
+import models.Home;
+import models.Room;
 import org.slf4j.LoggerFactory;
 
 /*
@@ -24,7 +31,7 @@ public class Main {
     static Thread rx = new Thread() {
         public void run() {
             DatagramSocket sock = null;
-            byte[] msg = new byte[91];
+            byte[] msg = new byte[256];
             DatagramPacket pack = new DatagramPacket(msg, msg.length);
             try {
                 sock = new DatagramSocket(1901);
@@ -38,8 +45,59 @@ public class Main {
             while (true) {
                 try {
                     sock.receive(pack);
-                    String teste = new String(pack.getData()).trim();
-                    System.out.println("Pacote recebido: " + teste);
+                    String aux = new String(pack.getData()).trim();
+                    System.out.println("Pacote recebido: " + aux);
+                    Room createdRoom = null;
+                    Home bean = new Home();
+                    StringTokenizer rooms = new StringTokenizer(aux, "/");
+                    bean.setId(rooms.nextToken());
+                    bean.setIp(rooms.nextToken());
+                    RoomDao daoRoom = new RoomDao();
+                    DeviceDao daoDevice = new DeviceDao();
+                    Room r = null;
+                    Device d = null;
+                    Device createdDevice;
+                    while (rooms.hasMoreElements()) {
+                        StringTokenizer devices = new StringTokenizer(rooms.nextToken(), ";");
+                        while (devices.hasMoreElements()) {
+                            String nxt = devices.nextToken();
+                            if (nxt.length() > 1) {
+                                createdRoom = new Room(nxt);
+                                createdRoom.setHome(bean);
+                                r = daoRoom.get(createdRoom);
+                                if (r != null) {
+                                    createdRoom.setId(r.getId());
+                                }
+                                bean.getRooms().add(createdRoom);
+                            } else if (createdRoom != null) {
+                                switch (nxt) {
+                                    case "l":
+                                        createdRoom.getDevices().add(new Device("Light", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
+                                        break;
+                                    case "w":
+                                        createdRoom.getDevices().add(new Device("Window", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
+                                        break;
+                                    case "a":
+                                        createdRoom.getDevices().add(new Device("Air conditioner", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0)));
+                                        break;
+                                    default:
+                                        System.out.println("Dispositivo não reconhecido");
+                                        break;
+                                }
+                                createdDevice = createdRoom.getDevices().get(createdRoom.getDevices().size() - 1);
+                                createdDevice.setRoom(createdRoom);
+                                d = daoDevice.get(createdDevice);
+                                if (d != null) {
+                                    createdDevice.setId(d.getId());
+                                }
+                            }
+
+                        }
+
+                    }
+                    HomeDao dao = new HomeDao();
+                    dao.save(bean);
+                    System.out.println("Home" + bean.getId() + "criada");
                 } catch (IOException ex) {
                     org.slf4j.Logger logger = LoggerFactory.getLogger(TopHatMB.class);
                     logger.error(ex.getMessage(), ex);
