@@ -6,6 +6,7 @@ package bean;
 
 import dao.HomeDao;
 import dao.IUserDao;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,10 @@ public class HomeMB {
     
     private Home bean = new Home();
 
+    public HomeMB() {
+    }
+    
+
     public Home getBean() {
         return bean;
     }
@@ -34,28 +39,30 @@ public class HomeMB {
         HomeDao daoHome = new HomeDao();
         IUserDao daoUser = new IUserDao();
         IUser user = new IUser();
-        Home auxHome = new Home();
+        Home auxHome;
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
-        userSession.pullUserInfo();
         if (userSession != null) {
             Profile profile = userSession.getProfile();
             auxHome = daoHome.get(bean.getId());
             if (auxHome != null) {
-                bean = user.getHome();
+                bean = auxHome;
+                user.setHome(auxHome);
                 user.setEmail(profile.getEmail());
                 user.setFacebookId(profile.getValidatedId());
                 user.setName(profile.getFullName());
                 user.setSex(profile.getGender());
                 bean.getUsers().add(user);
-                return "home";
+                daoHome.save(bean);
+                daoUser.save(user);
+                session.setAttribute("homeSession", bean);
             } else {
                 //apresentar mensagem de que o código informado é inválido
-                return "newUser";
+                facesContext.addMessage(null, new FacesMessage("O código informado é inválido"));
             }
         }
-        return "index";
+        return "home";
     }
     
 }

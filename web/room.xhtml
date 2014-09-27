@@ -27,10 +27,10 @@
                                 <h:form>
                                     <h:commandLink action="#{topHatMB.addHistAction('l', d)}" value="Turn on" /><br/>
                                 </h:form>
-                                <a href="#{topHatMB.bean.url}/?l#{device.actionPort}" >Turn on</a>
+                                <a href="#{topHatMB.bean.ip}/?l#{device.actionPort}" >Turn on</a>
                             </c:when>
                             <c:otherwise>
-                                <a href="#{topHatMB.bean.url}/?d#{device.actionPort}" >Turn off</a>
+                                <a href="#{topHatMB.bean.ip}/?d#{device.actionPort}" >Turn off</a>
                             </c:otherwise>
                         </c:choose>
                     </p:panel>

@@ -10,8 +10,8 @@
         <title>Automação de Reservas e Pedido</title>
         <link rel = "stylesheet" type = "text/css" href = "sitestyle.css" />
     </h:head>
-    <h:body>
-        <pom:page>
+    <h:body onload="#{topHatMB.validateUser()}">
+        <pom:page rendered="#{topHatMB.isUser == true}"> 
             <ui:insert name="cabecalho">
                 <pom:header title="TopHat" swatch="b">
 
@@ -36,12 +36,23 @@
             </ui:insert>
             <ui:insert name="corpo"/>
         </pom:page>
-
+        <pom:page rendered="#{topHatMB.isUser == false}">
+            <ui:insert name="cabecalho">
+                <pom:header title="TopHat" swatch="b">
+                    <h1>Vemos que você é novo por aqui</h1>
+                    <h:form>
+                        <h:outputLabel id="homeId" value="Informe o código de sua residência"></h:outputLabel>
+                        <h:inputText value="#{topHatMB.bean.id}"></h:inputText>
+                        <h:commandButton value="Confirmar" action="#{topHatMB.addUser()}" type="submit"></h:commandButton>
+                    </h:form>
+                </pom:header>
+            </ui:insert>
+        </pom:page>
 
         <ui:insert name="rodape"/>
-            <hr/>
-            <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
-            <p>Fim do Mundo - AC</p>
-            <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
+        <hr/>
+        <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
+        <p>Fim do Mundo - AC</p>
+        <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
     </h:body>
 </html>
