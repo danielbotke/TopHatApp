@@ -17,7 +17,7 @@ import utils.JpaUtil;
  */
 public class IUserDao {
 
-    public IUser get(int id) {
+    public IUser get(long id) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
             return em.find(IUser.class, id);
@@ -32,7 +32,7 @@ public class IUserDao {
         trans.begin();
 
         try {
-            if (this.get(u.getId()) == null) {
+            if (this.get(u.getProviderId()) == null) {
                 em.persist(u);
             } else {
                 em.merge(u);
@@ -73,18 +73,4 @@ public class IUserDao {
         }
     }
     
-    public IUser getFacebookId(String facebookId) {
-        EntityManager em = JpaUtil.get().getEntityManager();
-        try {
-            Query q = em.createQuery("select u from IUser as u where u.facebookId = " + facebookId);
-            List result = q.getResultList();
-            if(result != null && result.size() > 0){
-                return (IUser)result.get(0);
-            }else{
-                return null;
-            }
-        } finally {
-            em.close();
-        }
-    }
 }

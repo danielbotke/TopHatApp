@@ -76,10 +76,10 @@ public class RoomDao {
         }
     }
 
-    public List<Room> list() {
+    public List<Room> list(String homeId) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select c from Room as c");
+            Query q = em.createQuery("select r from Room as r where r.home.id = '" + homeId + "'");
             return q.getResultList();
         } finally {
             em.close();

@@ -41,7 +41,7 @@ public class Mineracao {
             date.setYear(date.getYear() -1);
         }
         String actions[] = {"l", "d"};
-        List<Device> devices = deviceDao.list();
+        List<Device> devices = deviceDao.listAll();
         for (int d = 0; d < devices.size(); d++) {
             for (int a = 0; a < actions.length; a++) {
                 List<HistAction> data = histDao.listPeriod(date, new Date(), actions[a], devices.get(d));

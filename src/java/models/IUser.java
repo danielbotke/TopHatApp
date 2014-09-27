@@ -7,7 +7,6 @@ package models;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,27 +20,17 @@ import javax.persistence.ManyToOne;
 @Entity
 public class IUser implements Serializable {
     @Id
-    @GeneratedValue
-    private int id;
+    private long providerId;
     @Column
     private String name;
     @Column
     private String sex;
     @Column
     private String email;
-    @Column
-    private String facebookId;
     @ManyToOne
     @JoinColumn(name = "home_id")
     private Home home;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -75,12 +64,12 @@ public class IUser implements Serializable {
         this.home = home;
     }
 
-    public String getFacebookId() {
-        return facebookId;
+    public long getProviderId() {
+        return providerId;
     }
 
-    public void setFacebookId(String facebookId) {
-        this.facebookId = facebookId;
+    public void setProviderId(long providerId) {
+        this.providerId = providerId;
     }
     
 }

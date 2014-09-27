@@ -73,10 +73,20 @@ public class DeviceDao {
         }
     }
 
-    public List<Device> list() {
+    public List<Device> list(int roomId) {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
-            Query q = em.createQuery("select c from Device as c");
+            Query q = em.createQuery("select d from Device as d where d.room.id = " + roomId);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+        public List<Device> listAll() {
+        EntityManager em = JpaUtil.get().getEntityManager();
+        try {
+            Query q = em.createQuery("select d from Device as d");
             return q.getResultList();
         } finally {
             em.close();

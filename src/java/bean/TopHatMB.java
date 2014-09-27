@@ -39,8 +39,10 @@ public class TopHatMB {
     private IUser user;
     private Logger logger = LoggerFactory.getLogger(TopHatMB.class);
     private boolean isUser = false;
+    private boolean validatedUser = false;
 
-    public Home getBean() {
+    public Home getBean() throws Exception {
+        this.validateUser();
         return bean;
     }
 
@@ -72,7 +74,7 @@ public class TopHatMB {
         this.isUser = isUser;
     }
 
-    public TopHatMB() throws Exception {
+    public TopHatMB() {
     }
 
     /**
@@ -80,27 +82,29 @@ public class TopHatMB {
      *
      * @throws Exception
      */
-    public boolean validateUser() throws Exception {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
-        if (session.getAttribute("pullUserExecuted") == null) {
+    public void validateUser() throws Exception {
+        if (!validatedUser) {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            UserSessionBean userSession = (UserSessionBean) session.getAttribute("userSession");
+            if (session.getAttribute("pullUserExecuted") == null) {
                 userSession.pullUserInfo();
                 session.setAttribute("pullUserExecuted", true);
-        }
-        userSession = (UserSessionBean) session.getAttribute("userSession");
-        if (userSession != null) {
-            Profile profile = userSession.getProfile();
-            IUserDao userDao = new IUserDao();
-            user = userDao.getFacebookId(profile.getValidatedId());
-            if (user == null) {
-                return false;
-            } else {
-                bean = user.getHome();
-                return true;
+            }
+            userSession = (UserSessionBean) session.getAttribute("userSession");
+            if (userSession != null) {
+                Profile profile = userSession.getProfile();
+                IUserDao userDao = new IUserDao();
+                user = userDao.get(Long.parseLong(profile.getValidatedId()));
+                if (user == null) {
+                    isUser = false;
+                } else {
+                    bean = user.getHome();
+                    //    bean.setRooms(bean.getRooms());
+                    isUser = true;
+                }
             }
         }
-        return false;
     }
 
     public String addUser() throws Exception {
@@ -118,24 +122,18 @@ public class TopHatMB {
                 bean = auxHome;
                 userAux.setHome(bean);
                 userAux.setEmail(profile.getEmail());
-                userAux.setFacebookId(profile.getValidatedId());
+                userAux.setProviderId(Long.parseLong(profile.getValidatedId()));
                 userAux.setName(profile.getFullName());
-                userAux.setSex(profile.getGender());
-                if(bean.getUsers() == null){
-                    bean.setUsers(new ArrayList<IUser>()); 
-                }
-                bean.getUsers().add(userAux);
-                daoHome.save(bean);
                 daoUser.save(userAux);
                 isUser = true;
                 return "home";
             } else {
                 //apresentar mensagem de que o código informado é inválido
                 facesContext.addMessage(null, new FacesMessage("O código informado é inválido"));
-                return "newUser";
+                return "home";
             }
         }
-        return "index";
+        return "home";
     }
 
     public String selectRoom(String room) {
@@ -155,7 +153,7 @@ public class TopHatMB {
         hist.setAction(new IAction(action, d));
         HistActionDao histActDao = new HistActionDao();
         histActDao.save(hist);
-        URL url = new URL("http://" + bean.getIp() + ":9898/?" + action + d.getActionPort());
+        URL url = new URL("http://" + bean.getIp() + "/?" + action + d.getActionPort());
         url.openConnection();
     }
 

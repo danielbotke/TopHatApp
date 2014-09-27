@@ -4,6 +4,7 @@
  */
 package models;
 
+import dao.DeviceDao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class Room implements Serializable {
     }
 
     public List<Device> getDevices() {
+        this.setDevices((new DeviceDao()).list(this.id));
         return devices;
     }
 

@@ -4,6 +4,7 @@
  */
 package models;
 
+import dao.RoomDao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class Home implements Serializable {
     private String ip;
 
     public List<Room> getRooms() {
+        rooms = (new RoomDao()).list(this.id);
         return rooms;
     }
 

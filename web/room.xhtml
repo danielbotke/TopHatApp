@@ -22,17 +22,17 @@
                 </c:if>
                 <c:if test="#{device.type == 'l'}">
                     <p:panel header="Light" toggleable="true">
-                        <c:choose>
-                            <c:when test="#{device.statusDevice == 0}"> 
-                                <h:form>
-                                    <h:commandLink action="#{topHatMB.addHistAction('l', d)}" value="Turn on" /><br/>
-                                </h:form>
-                                <a href="#{topHatMB.bean.ip}/?l#{device.actionPort}" >Turn on</a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="#{topHatMB.bean.ip}/?d#{device.actionPort}" >Turn off</a>
-                            </c:otherwise>
-                        </c:choose>
+                        <h:form>
+                            <c:choose>
+                                <c:when test="#{device.statusDevice == 0}"> 
+                                    <h:commandLink action="#{topHatMB.addHistAction('l', d)}" value="Turn on action" /><br/>
+                                    <a href="http://#{topHatMB.bean.ip}/?l#{device.actionPort}" >Turn on link</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="#{topHatMB.bean.ip}/?d#{device.actionPort}" >Turn off</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </h:form>
                     </p:panel>
                 </c:if>
             </c:forEach>

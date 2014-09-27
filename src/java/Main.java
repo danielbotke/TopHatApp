@@ -26,9 +26,12 @@ import org.slf4j.LoggerFactory;
 public class Main {
 
     public void UDPListener() {
-        rx.start();
+        if (!rx.isAlive()) {
+            rx.start();
+        }
     }
     static Thread rx = new Thread() {
+        @Override
         public void run() {
             DatagramSocket sock = null;
             byte[] msg = new byte[256];
@@ -54,8 +57,8 @@ public class Main {
                     bean.setIp(rooms.nextToken());
                     RoomDao daoRoom = new RoomDao();
                     DeviceDao daoDevice = new DeviceDao();
-                    Room r = null;
-                    Device d = null;
+                    Room r;
+                    Device d;
                     Device createdDevice;
                     while (rooms.hasMoreElements()) {
                         StringTokenizer devices = new StringTokenizer(rooms.nextToken(), ";");
@@ -90,9 +93,12 @@ public class Main {
                                 if (d != null) {
                                     createdDevice.setId(d.getId());
                                 }
+                                daoDevice.save(createdDevice);
                             }
+                            
 
                         }
+                        daoRoom.save(createdRoom);
 
                     }
                     HomeDao dao = new HomeDao();

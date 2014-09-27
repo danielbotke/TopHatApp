@@ -11,7 +11,7 @@
         <link rel = "stylesheet" type = "text/css" href = "sitestyle.css" />
     </h:head>
     <h:body onload="#{topHatMB.validateUser()}">
-        <pom:page rendered="#{topHatMB.isUser == true}"> 
+        <pom:page  rendered="#{topHatMB.isUser == true}"> 
             <ui:insert name="cabecalho">
                 <pom:header title="TopHat" swatch="b">
 
@@ -21,9 +21,9 @@
             </ui:insert>
             <ui:insert name="menu">
                 <pom:content styleClass="jqm-content">
-                    <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay">
+                    <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay" >
                         <h2>Rooms</h2>
-                        <h:form>
+                        <h:form >
                             <p:menu>
                                 <c:forEach var="room" items="#{topHatMB.bean.rooms}">
                                     <p:menuitem  value="#{room.name}" action="#{topHatMB.selectRoom(room.name)}"/>
@@ -49,10 +49,11 @@
             </ui:insert>
         </pom:page>
 
-        <ui:insert name="rodape"/>
-        <hr/>
-        <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
-        <p>Fim do Mundo - AC</p>
-        <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
+        <ui:insert name="rodape">
+            <hr/>
+            <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
+            <p>Fim do Mundo - AC</p>
+            <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
+        </ui:insert>
     </h:body>
 </html>
