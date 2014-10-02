@@ -39,47 +39,47 @@ import org.slf4j.LoggerFactory;
 @ManagedBean(name = "topHatMB")
 @SessionScoped
 public class TopHatMB {
-    
+
     private Home bean = new Home();
     private Room currentRoom = null;
     private IUser user;
     private Logger logger = LoggerFactory.getLogger(TopHatMB.class);
     private boolean isUser = false;
     private boolean validatedUser = false;
-    
+
     public Home getBean() throws Exception {
         this.validateUser();
         return bean;
     }
-    
+
     public void setBean(Home bean) {
         this.bean = bean;
     }
-    
+
     public Room getCurrentRoom() {
         return currentRoom;
     }
-    
+
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
-    
+
     public IUser getUser() {
         return user;
     }
-    
+
     public void setUser(IUser user) {
         this.user = user;
     }
-    
+
     public boolean isIsUser() {
         return isUser;
     }
-    
+
     public void setIsUser(boolean isUser) {
         this.isUser = isUser;
     }
-    
+
     public TopHatMB() {
     }
 
@@ -112,7 +112,7 @@ public class TopHatMB {
             }
         }
     }
-    
+
     public String addUser() throws Exception {
         HomeDao daoHome = new HomeDao();
         IUserDao daoUser = new IUserDao();
@@ -141,7 +141,7 @@ public class TopHatMB {
         }
         return "home";
     }
-    
+
     public String selectRoom(String room) {
         for (int i = 0; i < bean.getRooms().size(); i++) {
             if ((bean.getRooms().get(i).getName()).equalsIgnoreCase(room)) {
@@ -151,7 +151,7 @@ public class TopHatMB {
         }
         return "";
     }
-    
+
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
         //String action = "";
         //Device d = new Device();
@@ -161,7 +161,7 @@ public class TopHatMB {
             con.getContent();
         } catch (IOException e) {
             return null;
-        }        
+        }
         if (d.getType() == 'l') {
             if (d.getStatus() == 0) {
                 d.setStatusDevice(1);
@@ -176,13 +176,18 @@ public class TopHatMB {
         hist.setDateTime(new Date());
         IAction action = new IAction(act, d);
         IActionDao daoIAction = new IActionDao();
-        daoIAction.save(action);
+        IAction auxAction = daoIAction.get(action);
+        if (auxAction == null) {
+            daoIAction.save(action);
+        } else {
+            action.setId(auxAction.getId());
+        }
         hist.setAction(action);
         HistActionDao histActDao = new HistActionDao();
         histActDao.save(hist);
         return "room";
     }
-    
+
     public void activateTodoAction(int actionId) {
         ToDoActionDao dao = new ToDoActionDao();
         bean.getToDoAction().get(actionId).setActivated(Boolean.TRUE);
