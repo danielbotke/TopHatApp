@@ -21,19 +21,21 @@
                     </p:panel>
                 </c:if>
                 <c:if test="#{device.type == 'l'}">
-                    <p:panel header="Light" toggleable="true">
-                        <h:form>
-                            <c:choose>
-                                <c:when test="#{device.statusDevice == 0}"> 
-                                    <h:commandLink action="#{topHatMB.addHistAction('l', d)}" value="Turn on action" /><br/>
-                                    <a href="http://#{topHatMB.bean.ip}/?l#{device.actionPort}" >Turn on link</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="#{topHatMB.bean.ip}/?d#{device.actionPort}" >Turn off</a>
-                                </c:otherwise>
-                            </c:choose>
-                        </h:form>
-                    </p:panel>
+                    <h:form>
+                        <p:panel header="Light" toggleable="true">
+                            <p:outputPanel>
+                                <c:choose>
+                                    <c:when test="#{device.statusDevice == 0}">
+                                        
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'l')}" value="Turn on action" ajax="false"/><br/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'd')}" value="Turn off action" ajax="false"/><br/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p:outputPanel>
+                        </p:panel>
+                    </h:form>
                 </c:if>
             </c:forEach>
         </ui:define>

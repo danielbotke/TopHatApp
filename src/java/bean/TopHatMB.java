@@ -4,17 +4,22 @@
  */
 package bean;
 
+import dao.DeviceDao;
 import dao.HistActionDao;
 import dao.HomeDao;
+import dao.IActionDao;
 import dao.IUserDao;
 import dao.ToDoActionDao;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import models.Device;
@@ -32,48 +37,49 @@ import org.slf4j.LoggerFactory;
  * @author Daniel
  */
 @ManagedBean(name = "topHatMB")
+@SessionScoped
 public class TopHatMB {
-
+    
     private Home bean = new Home();
     private Room currentRoom = null;
     private IUser user;
     private Logger logger = LoggerFactory.getLogger(TopHatMB.class);
     private boolean isUser = false;
     private boolean validatedUser = false;
-
+    
     public Home getBean() throws Exception {
         this.validateUser();
         return bean;
     }
-
+    
     public void setBean(Home bean) {
         this.bean = bean;
     }
-
+    
     public Room getCurrentRoom() {
         return currentRoom;
     }
-
+    
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
-
+    
     public IUser getUser() {
         return user;
     }
-
+    
     public void setUser(IUser user) {
         this.user = user;
     }
-
+    
     public boolean isIsUser() {
         return isUser;
     }
-
+    
     public void setIsUser(boolean isUser) {
         this.isUser = isUser;
     }
-
+    
     public TopHatMB() {
     }
 
@@ -106,7 +112,7 @@ public class TopHatMB {
             }
         }
     }
-
+    
     public String addUser() throws Exception {
         HomeDao daoHome = new HomeDao();
         IUserDao daoUser = new IUserDao();
@@ -135,7 +141,7 @@ public class TopHatMB {
         }
         return "home";
     }
-
+    
     public String selectRoom(String room) {
         for (int i = 0; i < bean.getRooms().size(); i++) {
             if ((bean.getRooms().get(i).getName()).equalsIgnoreCase(room)) {
@@ -145,18 +151,38 @@ public class TopHatMB {
         }
         return "";
     }
-
-    public void addHistAction(String action, Device d) throws MalformedURLException, IOException {
+    
+    public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
+        //String action = "";
+        //Device d = new Device();
+        try {
+            URL url = new URL("http://" + bean.getIp() + "/?" + act + d.getActionPort());
+            URLConnection con = url.openConnection();
+            con.getContent();
+        } catch (IOException e) {
+            return null;
+        }        
+        if (d.getType() == 'l') {
+            if (d.getStatus() == 0) {
+                d.setStatusDevice(1);
+            } else {
+                d.setStatusDevice(0);
+            }
+        }
+        DeviceDao daoDevice = new DeviceDao();
+        daoDevice.save(d);
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
-        hist.setAction(new IAction(action, d));
+        IAction action = new IAction(act, d);
+        IActionDao daoIAction = new IActionDao();
+        daoIAction.save(action);
+        hist.setAction(action);
         HistActionDao histActDao = new HistActionDao();
         histActDao.save(hist);
-        URL url = new URL("http://" + bean.getIp() + "/?" + action + d.getActionPort());
-        url.openConnection();
+        return "room";
     }
-
+    
     public void activateTodoAction(int actionId) {
         ToDoActionDao dao = new ToDoActionDao();
         bean.getToDoAction().get(actionId).setActivated(Boolean.TRUE);

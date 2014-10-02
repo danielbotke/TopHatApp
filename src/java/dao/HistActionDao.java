@@ -27,9 +27,15 @@ public class HistActionDao {
             em.close();
         }
     }
-
+    
     public boolean save(HistAction h) {
         EntityManager em = JpaUtil.get().getEntityManager();
+        Boolean result = this.save(h, em);
+        em.close();
+        return result;
+    }
+
+    public boolean save(HistAction h, EntityManager em) {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
 
@@ -44,8 +50,6 @@ public class HistActionDao {
         } catch (Exception ex) {
             trans.rollback();
             return false;
-        } finally {
-            em.close();
         }
     }
 
