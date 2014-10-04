@@ -4,13 +4,16 @@
  */
 package models;
 
+import dao.DeviceDao;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -32,6 +35,8 @@ public class Device implements Serializable {
     @ManyToOne
     @JoinColumn(name = "room_id", nullable=false)
     private Room room;
+    @OneToOne
+    private AirConditioner airConditioner;
     
 
     public Device() {
@@ -99,5 +104,16 @@ public class Device implements Serializable {
     public void setRoom(Room room) {
         this.room = room;
     }
+
+    public AirConditioner getAirConditioner() {
+        //this.setAirConditioner((new AirConditionerDao()).list(this.id));
+             return airConditioner;
+    }
+
+    public void setAirConditioner(AirConditioner airConditioner) {
+        this.airConditioner = airConditioner;
+    }
+    
+    
     
 }

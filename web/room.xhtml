@@ -26,13 +26,29 @@
                             <p:outputPanel>
                                 <c:choose>
                                     <c:when test="#{device.statusDevice == 0}">
-                                        
-                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'l')}" value="Turn on action" ajax="false"/><br/>
+
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'l')}" value="Turn on" ajax="false"/><br/>
                                     </c:when>
                                     <c:otherwise>
-                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'd')}" value="Turn off action" ajax="false"/><br/>
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'd')}" value="Turn off" ajax="false"/><br/>
                                     </c:otherwise>
                                 </c:choose>
+                            </p:outputPanel>
+                        </p:panel>
+                    </h:form>
+                </c:if>
+                <c:if test="#{device.type == 'a'}">
+                    <h:form>
+                        <p:panel header="Air Conditioner" toggleable="true">
+                            <h:panelGrid columns="2" id="grid" rendered="#{device.airConditioner.ligado} = true"> 
+                                <h:outputLabel for="temp" value="Temperatura: #{device.airConditioner.temperatura}" /><h:outputLabel/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp+')}" value="Temp +" ajax="false"/><br/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp-')}" value="Temp -" ajax="false"/><br/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'swing')}" value="Swing" ajax="false"/><br/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn off" ajax="false"/><br/>
+                            </h:panelGrid>                    
+                            <p:outputPanel rendered="#{device.airConditioner.ligado} = false">
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn on" ajax="false"/><br/>
                             </p:outputPanel>
                         </p:panel>
                     </h:form>

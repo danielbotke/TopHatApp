@@ -11,12 +11,14 @@ import dao.IActionDao;
 import dao.IUserDao;
 import dao.ToDoActionDao;
 import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -153,8 +155,33 @@ public class TopHatMB {
     }
 
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
-        //String action = "";
-        //Device d = new Device();
+        //tmp+ temp- swing a
+        if (d.getType() == 'a') {
+            Properties props = new Properties(); 
+            FileInputStream file = new FileInputStream( "./komeco.properties"); 
+            props.load(file);
+            switch (act) {
+                case "tmp+":
+                    act = props.getProperty("auto"+(d.getAirConditioner().getTemperatura() + 1));
+                    break;
+                case "temp-":
+                    act = props.getProperty("auto"+(d.getAirConditioner().getTemperatura() - 1));
+                    break;
+                case "swing":
+                    act = props.getProperty("swing");
+                    break;
+                case "a":
+                    if(d.getAirConditioner().isLigado()){
+                        act = props.getProperty("turOff");
+                    }else{
+                        act = props.getProperty("auto" + d.getAirConditioner().getTemperatura());
+                    }
+                    break;
+                default:
+                    System.out.println("Action inválida");
+                    break;
+            }
+        }
         try {
             URL url = new URL("http://" + bean.getIp() + "/?" + act + d.getActionPort());
             URLConnection con = url.openConnection();

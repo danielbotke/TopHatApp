@@ -1,5 +1,6 @@
 
 import bean.TopHatMB;
+import dao.AirConditionerDao;
 import dao.DeviceDao;
 import dao.HomeDao;
 import dao.RoomDao;
@@ -7,9 +8,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
+import models.AirConditioner;
 import models.Device;
 import models.Home;
 import models.Room;
@@ -56,6 +57,7 @@ public class Main {
                     Device createdDevice;
                     Room r;
                     Device d;
+                    AirConditioner a;
                     Home bean = new Home();
 
                     StringTokenizer rooms = new StringTokenizer(aux, "/");
@@ -65,6 +67,8 @@ public class Main {
                     RoomDao daoRoom = new RoomDao();
                     DeviceDao daoDevice = new DeviceDao();
                     HomeDao daoHome = new HomeDao();
+                    AirConditionerDao daoAir = new AirConditionerDao();
+                    
 
 
                     if (daoHome.get(bean.getId()) != null) {
@@ -101,6 +105,10 @@ public class Main {
                                         d = daoDevice.get(createdDevice);
                                         if (d != null) {
                                             createdDevice.setId(d.getId());
+                                        }else if(nxt.equalsIgnoreCase("a")){
+                                            a = new AirConditioner();
+                                            daoAir.save(a);
+                                            createdDevice.setAirConditioner(a);
                                         }
                                         daoDevice.save(createdDevice);
                                     }
