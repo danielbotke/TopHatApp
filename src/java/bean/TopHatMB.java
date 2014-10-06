@@ -4,6 +4,7 @@
  */
 package bean;
 
+import dao.AirConditionerDao;
 import dao.DeviceDao;
 import dao.HistActionDao;
 import dao.HomeDao;
@@ -155,32 +156,41 @@ public class TopHatMB {
     }
 
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
-        //tmp+ temp- swing a
+        String actAir = "";
         if (d.getType() == 'a') {
-            Properties props = new Properties(); 
-            FileInputStream file = new FileInputStream( "./komeco.properties"); 
+            Properties props = new Properties();
+            FileInputStream file = new FileInputStream("./komeco.properties");
             props.load(file);
             switch (act) {
                 case "tmp+":
-                    act = props.getProperty("auto"+(d.getAirConditioner().getTemperatura() + 1));
+                    d.getAirConditioner().setTemperatuda(d.getAirConditioner().getTemperatura() + 1);
+                    actAir = "auto" + d.getAirConditioner().getTemperatura();
+                    act = props.getProperty(actAir);
                     break;
                 case "temp-":
-                    act = props.getProperty("auto"+(d.getAirConditioner().getTemperatura() - 1));
+                    d.getAirConditioner().setTemperatuda(d.getAirConditioner().getTemperatura() - 1);
+                    actAir = "auto" + d.getAirConditioner().getTemperatura();
+                    act = props.getProperty(actAir);
                     break;
                 case "swing":
+                    actAir = "swing";
                     act = props.getProperty("swing");
                     break;
                 case "a":
-                    if(d.getAirConditioner().isLigado()){
+                    if (d.getAirConditioner().isLigado()) {
+                        actAir = "turOff";
                         act = props.getProperty("turOff");
-                    }else{
+                    } else {
+                        actAir = "turOn";
                         act = props.getProperty("auto" + d.getAirConditioner().getTemperatura());
                     }
+                    d.getAirConditioner().setLigado(!d.getAirConditioner().isLigado());
                     break;
                 default:
                     System.out.println("Action inválida");
                     break;
             }
+            new AirConditionerDao().save(d.getAirConditioner());
         }
         try {
             URL url = new URL("http://" + bean.getIp() + "/?" + act + d.getActionPort());
@@ -201,6 +211,9 @@ public class TopHatMB {
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
+        if(d.getType() == 'a'){
+            act = actAir;
+        }
         IAction action = new IAction(act, d);
         IActionDao daoIAction = new IActionDao();
         IAction auxAction = daoIAction.get(action);

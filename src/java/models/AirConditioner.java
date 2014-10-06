@@ -30,6 +30,7 @@ public class AirConditioner implements Serializable  {
 
     public AirConditioner() {
         temperatura = 17;
+        ligado = false;
     }
     
     public int getTemperatura() {

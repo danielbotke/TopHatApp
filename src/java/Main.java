@@ -57,7 +57,7 @@ public class Main {
                     Device createdDevice;
                     Room r;
                     Device d;
-                    AirConditioner a;
+                    AirConditioner a = null;
                     Home bean = new Home();
 
                     StringTokenizer rooms = new StringTokenizer(aux, "/");
@@ -68,7 +68,7 @@ public class Main {
                     DeviceDao daoDevice = new DeviceDao();
                     HomeDao daoHome = new HomeDao();
                     AirConditionerDao daoAir = new AirConditionerDao();
-                    
+
 
 
                     if (daoHome.get(bean.getId()) != null) {
@@ -93,7 +93,7 @@ public class Main {
                                             createdDevice = new Device("Window", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
                                             break;
                                         case "a":
-                                            createdDevice = new Device("Air conditioner", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
+                                            createdDevice = new Device("Air conditioner", Integer.parseInt(devices.nextToken()), 0, nxt.charAt(0));
                                             break;
                                         default:
                                             createdDevice = null;
@@ -105,12 +105,17 @@ public class Main {
                                         d = daoDevice.get(createdDevice);
                                         if (d != null) {
                                             createdDevice.setId(d.getId());
-                                        }else if(nxt.equalsIgnoreCase("a")){
-                                            a = new AirConditioner();
-                                            daoAir.save(a);
+                                            if (nxt.equalsIgnoreCase("a")) {
+                                                a = daoAir.getByDevice(d.getId());
+                                            }
                                             createdDevice.setAirConditioner(a);
+                                        } else {
+                                            if (nxt.equalsIgnoreCase("a")) {
+                                                a = new AirConditioner();
+                                                createdDevice.setAirConditioner(a);
+                                            }
                                         }
-                                        daoDevice.save(createdDevice);
+                                     daoDevice.save(createdDevice);   
                                     }
                                 }
                             }

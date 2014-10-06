@@ -26,6 +26,21 @@ public class AirConditionerDao {
             em.close();
         }
     }
+    
+        public AirConditioner getByDevice(int deviceId) {
+        EntityManager em = JpaUtil.get().getEntityManager();
+        
+        Query q = em.createQuery("select a from AirConditioner a where a.device.id = " + deviceId);
+        try {
+            if (q.getResultList().size() > 0) {
+                return (AirConditioner) q.getResultList().get(0);
+            } else {
+                return null;
+            }
+        } finally {
+            em.close();
+        }
+    }
 
     public boolean save(AirConditioner a) {
         EntityManager em = JpaUtil.get().getEntityManager();

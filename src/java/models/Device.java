@@ -4,6 +4,7 @@
  */
 package models;
 
+import dao.AirConditionerDao;
 import dao.DeviceDao;
 import java.io.Serializable;
 import java.util.List;
@@ -21,23 +22,23 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class Device implements Serializable {
+
     @Id
     @GeneratedValue
     private int id;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String name;
     @Column
     private int actionPort;
     @Column
     private int statusDevice;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private char type;
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable=false)
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
     @OneToOne
     private AirConditioner airConditioner;
-    
 
     public Device() {
     }
@@ -47,7 +48,7 @@ public class Device implements Serializable {
         this.actionPort = actionPort;
         this.statusDevice = statusDevice;
         this.type = type;
-    }    
+    }
 
     public String getName() {
         return name;
@@ -106,14 +107,11 @@ public class Device implements Serializable {
     }
 
     public AirConditioner getAirConditioner() {
-        //this.setAirConditioner((new AirConditionerDao()).list(this.id));
-             return airConditioner;
+        this.setAirConditioner(new AirConditionerDao().getByDevice(id));
+        return airConditioner;
     }
 
     public void setAirConditioner(AirConditioner airConditioner) {
         this.airConditioner = airConditioner;
     }
-    
-    
-    
 }
