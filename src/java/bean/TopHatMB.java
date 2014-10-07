@@ -197,7 +197,6 @@ public class TopHatMB {
             URLConnection con = url.openConnection();
             con.getContent();
         } catch (IOException e) {
-            return null;
         }
         if (d.getType() == 'l') {
             if (d.getStatus() == 0) {
