@@ -40,14 +40,14 @@
                 <c:if test="#{device.type == 'a'}">
                     <h:form>
                         <p:panel header="Air Conditioner" toggleable="true">
-                            <h:panelGrid columns="2" id="grid" rendered="#{device.airConditioner.ligado} = true"> 
+                            <h:panelGrid columns="2" id="grid" rendered="#{device.airConditioner.ligado == true}"> 
                                 <h:outputLabel for="temp" value="Temperatura: #{device.airConditioner.temperatura}" /><h:outputLabel/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp+')}" value="Temp +" ajax="false"/><br/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp-')}" value="Temp -" ajax="false"/><br/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'swing')}" value="Swing" ajax="false"/><br/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn off" ajax="false"/><br/>
                             </h:panelGrid>                    
-                            <p:outputPanel rendered="#{device.airConditioner.ligado} = false">
+                            <p:outputPanel rendered="#{device.airConditioner.ligado == false}">
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn on" ajax="false"/><br/>
                             </p:outputPanel>
                         </p:panel>

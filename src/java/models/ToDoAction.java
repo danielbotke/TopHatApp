@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
@@ -29,7 +29,8 @@ public class ToDoAction implements Serializable {
     @Column(nullable = false)
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dateTime;
-    @OneToOne(mappedBy = "histAction", fetch = FetchType.LAZY, optional = false)
+    @OneToOne
+    @MapsId
     private IAction action;
     @ManyToOne
     @JoinColumn(name = "home_id", nullable = false)

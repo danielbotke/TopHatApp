@@ -41,7 +41,7 @@ public class AirConditioner implements Serializable  {
         this.temperatura = temperatura;
     }
 
-    public boolean isLigado() {
+    public boolean getLigado() {
         return ligado;
     }
 

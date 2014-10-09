@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -37,7 +38,7 @@ public class Device implements Serializable {
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
-    @OneToOne
+    @OneToOne(mappedBy = "device", optional = true)
     private AirConditioner airConditioner;
 
     public Device() {

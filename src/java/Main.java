@@ -55,6 +55,7 @@ public class Main {
 
                     Room createdRoom = null;
                     Device createdDevice;
+                    AirConditioner createdAir;
                     Room r;
                     Device d;
                     AirConditioner a = null;
@@ -105,17 +106,18 @@ public class Main {
                                         d = daoDevice.get(createdDevice);
                                         if (d != null) {
                                             createdDevice.setId(d.getId());
-                                            if (nxt.equalsIgnoreCase("a")) {
-                                                a = daoAir.getByDevice(d.getId());
-                                            }
-                                            createdDevice.setAirConditioner(a);
-                                        } else {
-                                            if (nxt.equalsIgnoreCase("a")) {
-                                                a = new AirConditioner();
-                                                createdDevice.setAirConditioner(a);
-                                            }
                                         }
-                                     daoDevice.save(createdDevice);   
+                                        daoDevice.save(createdDevice);
+                                        if (nxt.equalsIgnoreCase("a")) {
+                                            createdDevice = daoDevice.get(createdDevice);
+                                            createdAir = new AirConditioner();
+                                            createdAir.setDevice(createdDevice);
+                                            a = daoAir.getByDevice(createdDevice.getId());
+                                            if (a != null) {
+                                                createdAir.setId(a.getId());
+                                            }
+                                            daoAir.save(createdAir);
+                                        }
                                     }
                                 }
                             }

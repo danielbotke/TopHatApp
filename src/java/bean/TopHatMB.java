@@ -177,14 +177,14 @@ public class TopHatMB {
                     act = props.getProperty("swing");
                     break;
                 case "a":
-                    if (d.getAirConditioner().isLigado()) {
+                    if (d.getAirConditioner().getLigado()) {
                         actAir = "turOff";
                         act = props.getProperty("turOff");
                     } else {
                         actAir = "turOn";
                         act = props.getProperty("auto" + d.getAirConditioner().getTemperatura());
                     }
-                    d.getAirConditioner().setLigado(!d.getAirConditioner().isLigado());
+                    d.getAirConditioner().setLigado(!d.getAirConditioner().getLigado());
                     break;
                 default:
                     System.out.println("Action inválida");

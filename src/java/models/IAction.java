@@ -27,10 +27,6 @@ public class IAction implements Serializable {
     @OneToOne
     @MapsId
     private Device device;
-    @OneToOne
-    private HistAction histAction;
-    @OneToOne
-    private ToDoAction toDoAction;
 
     public IAction(String name, Device device) {
         this.name = name;
@@ -64,20 +60,6 @@ public class IAction implements Serializable {
         this.device = device;
     }
 
-    public HistAction getHistAction() {
-        return histAction;
-    }
 
-    public void setHistAction(HistAction histAction) {
-        this.histAction = histAction;
-    }
-
-    public ToDoAction getToDoAction() {
-        return toDoAction;
-    }
-
-    public void setToDoAction(ToDoAction toDoAction) {
-        this.toDoAction = toDoAction;
-    }
     
 }
