@@ -12,6 +12,7 @@ import dao.IActionDao;
 import dao.IUserDao;
 import dao.ToDoActionDao;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -25,6 +26,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import models.AirConditioner;
 import models.Device;
 import models.HistAction;
 import models.Home;
@@ -159,16 +161,22 @@ public class TopHatMB {
         String actAir = "";
         if (d.getType() == 'a') {
             Properties props = new Properties();
-            FileInputStream file = new FileInputStream("./komeco.properties");
+            File f = new File("src/komeco.properties");
+            FileInputStream file = new FileInputStream("C:\\airs\\komeco.properties");
             props.load(file);
+            AirConditioner a = d.getAirConditioner();
             switch (act) {
-                case "tmp+":
-                    d.getAirConditioner().setTemperatuda(d.getAirConditioner().getTemperatura() + 1);
+                case "temp+":
+                    if (a.getTemperatura() != 30) {
+                        a.setTemperatuda(d.getAirConditioner().getTemperatura() + 1);
+                    }
                     actAir = "auto" + d.getAirConditioner().getTemperatura();
                     act = props.getProperty(actAir);
                     break;
                 case "temp-":
-                    d.getAirConditioner().setTemperatuda(d.getAirConditioner().getTemperatura() - 1);
+                    if (a.getTemperatura() != 17) {
+                        a.setTemperatuda(d.getAirConditioner().getTemperatura() - 1);
+                    }
                     actAir = "auto" + d.getAirConditioner().getTemperatura();
                     act = props.getProperty(actAir);
                     break;
@@ -184,13 +192,14 @@ public class TopHatMB {
                         actAir = "turOn";
                         act = props.getProperty("auto" + d.getAirConditioner().getTemperatura());
                     }
-                    d.getAirConditioner().setLigado(!d.getAirConditioner().getLigado());
+                    a.setLigado(!a.getLigado());
                     break;
                 default:
                     System.out.println("Action inválida");
                     break;
             }
-            new AirConditionerDao().save(d.getAirConditioner());
+            new AirConditionerDao().save(a);
+            d.setAirConditioner(a);
         }
         try {
             URL url = new URL("http://" + bean.getIp() + "/?" + act + d.getActionPort());
@@ -210,7 +219,7 @@ public class TopHatMB {
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
-        if(d.getType() == 'a'){
+        if (d.getType() == 'a') {
             act = actAir;
         }
         IAction action = new IAction(act, d);

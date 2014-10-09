@@ -108,7 +108,7 @@ public class Main {
                                             createdDevice.setId(d.getId());
                                         }
                                         daoDevice.save(createdDevice);
-                                        if (nxt.equalsIgnoreCase("a")) {
+                                        if (nxt.equalsIgnoreCase("a") && d == null) {
                                             createdDevice = daoDevice.get(createdDevice);
                                             createdAir = new AirConditioner();
                                             createdAir.setDevice(createdDevice);
