@@ -23,7 +23,7 @@ import models.ToDoAction;
  */
 public class Mineracao {
 
-    public static void miningHistory(Home h) {
+    public void miningHistory(Home h) {
         HistActionDao histDao = new HistActionDao();
         ToDoActionDao todoDao = new ToDoActionDao();
         DeviceDao deviceDao = new DeviceDao();
@@ -40,7 +40,7 @@ public class Mineracao {
             date.setMonth(10);
             date.setYear(date.getYear() -1);
         }
-        String actions[] = {"l", "d"};
+        String actions[] = {"l", "d", "turOff", "turOn"};
         List<Device> devices = deviceDao.listAll();
         for (int d = 0; d < devices.size(); d++) {
             for (int a = 0; a < actions.length; a++) {

@@ -1,4 +1,7 @@
+package bean;
 
+
+import Mineracao.Mineracao;
 import bean.TopHatMB;
 import dao.AirConditionerDao;
 import dao.DeviceDao;
@@ -8,12 +11,21 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import models.AirConditioner;
 import models.Device;
 import models.Home;
 import models.Room;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.LoggerFactory;
 
 /*
@@ -25,14 +37,37 @@ import org.slf4j.LoggerFactory;
  * @author Daniel
  */
 @ManagedBean(name = "main")
-public class Main {
+public class Cluster {
+
+    public static SchedulerFactory schFactory;
+    public static Scheduler sch;
 
     public void UDPListener() {
-        if (!rx.isAlive()) {
-            rx.start();
+        if (!udp.isAlive()) {
+            udp.start();
+        }
+        if (!mining.isAlive()) {
+            mining.start();
         }
     }
-    static Thread rx = new Thread() {
+
+    public static SchedulerFactory getSchFactory() throws SchedulerException {
+        //schedule the job
+        if (schFactory == null) {
+            schFactory = new StdSchedulerFactory();
+            sch = schFactory.getScheduler();
+        }
+        return schFactory;
+    }
+
+    public static Scheduler getSch() throws SchedulerException {
+        if (!sch.isStarted() || sch.isShutdown() || sch.isInStandbyMode()) {
+            sch.start();
+        }
+        return sch;
+    }
+    
+    static Thread udp = new Thread() {
         @Override
         public void run() {
             DatagramSocket sock = null;
@@ -128,6 +163,26 @@ public class Main {
                 } catch (IOException ex) {
                     org.slf4j.Logger logger = LoggerFactory.getLogger(TopHatMB.class);
                     logger.error(ex.getMessage(), ex);
+                }
+            }
+        }
+    };
+    static Thread mining = new Thread() {
+        @Override
+        public void run() {
+            Date d = new Date();
+            if (d.getHours() == 3 && d.getMinutes() >= 20 && d.getMinutes() <= 30) {
+                HomeDao daoHome = new HomeDao();
+                Mineracao miningHistory = new Mineracao();
+                List<Home> homes = daoHome.list();
+                for (int i = 0; i < homes.size(); i++) {
+                    miningHistory.miningHistory(homes.get(i));
+                }
+            } else {
+                try {
+                    sleep(600000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Cluster.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

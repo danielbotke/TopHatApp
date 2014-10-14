@@ -4,6 +4,7 @@
  */
 package bean;
 
+import Mineracao.ExecuteToDoAction;
 import dao.AirConditionerDao;
 import dao.DeviceDao;
 import dao.HistActionDao;
@@ -11,14 +12,13 @@ import dao.HomeDao;
 import dao.IActionDao;
 import dao.IUserDao;
 import dao.ToDoActionDao;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 import javax.faces.application.FacesMessage;
@@ -33,7 +33,15 @@ import models.Home;
 import models.IAction;
 import models.IUser;
 import models.Room;
+import models.ToDoAction;
 import org.brickred.socialauth.Profile;
+import org.quartz.CronTrigger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.TriggerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +55,7 @@ public class TopHatMB {
 
     private Home bean = new Home();
     private Room currentRoom = null;
+    private Device currentDevice = null;
     private IUser user;
     private Logger logger = LoggerFactory.getLogger(TopHatMB.class);
     private boolean isUser = false;
@@ -87,6 +96,23 @@ public class TopHatMB {
 
     public TopHatMB() {
     }
+
+    public Device getCurrentDevice() {
+        return currentDevice;
+    }
+
+    public void setCurrentDevice(Device currentDevice) {
+        this.currentDevice = currentDevice;
+    }
+
+    public boolean isValidatedUser() {
+        return validatedUser;
+    }
+
+    public void setValidatedUser(boolean validatedUser) {
+        this.validatedUser = validatedUser;
+    }
+    
 
     /**
      * Creates a new instance of TopHatMB
@@ -158,70 +184,13 @@ public class TopHatMB {
     }
 
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
-        String actAir = "";
-        if (d.getType() == 'a') {
-            Properties props = new Properties();
-            File f = new File("src/komeco.properties");
-            FileInputStream file = new FileInputStream("C:\\airs\\komeco.properties");
-            props.load(file);
-            AirConditioner a = d.getAirConditioner();
-            switch (act) {
-                case "temp+":
-                    if (a.getTemperatura() != 30) {
-                        a.setTemperatuda(d.getAirConditioner().getTemperatura() + 1);
-                    }
-                    actAir = "auto" + d.getAirConditioner().getTemperatura();
-                    act = props.getProperty(actAir);
-                    break;
-                case "temp-":
-                    if (a.getTemperatura() != 17) {
-                        a.setTemperatuda(d.getAirConditioner().getTemperatura() - 1);
-                    }
-                    actAir = "auto" + d.getAirConditioner().getTemperatura();
-                    act = props.getProperty(actAir);
-                    break;
-                case "swing":
-                    actAir = "swing";
-                    act = props.getProperty("swing");
-                    break;
-                case "a":
-                    if (d.getAirConditioner().getLigado()) {
-                        actAir = "turOff";
-                        act = props.getProperty("turOff");
-                    } else {
-                        actAir = "turOn";
-                        act = props.getProperty("auto" + d.getAirConditioner().getTemperatura());
-                    }
-                    a.setLigado(!a.getLigado());
-                    break;
-                default:
-                    System.out.println("Action inválida");
-                    break;
-            }
-            new AirConditionerDao().save(a);
-            d.setAirConditioner(a);
-        }
-        try {
-            URL url = new URL("http://" + bean.getIp() + "/?" + act + d.getActionPort());
-            URLConnection con = url.openConnection();
-            con.getContent();
-        } catch (IOException e) {
-        }
-        if (d.getType() == 'l') {
-            if (d.getStatus() == 0) {
-                d.setStatusDevice(1);
-            } else {
-                d.setStatusDevice(0);
-            }
-        }
+        currentDevice = d;
+        act = this.executeAction(act);
         DeviceDao daoDevice = new DeviceDao();
         daoDevice.save(d);
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
-        if (d.getType() == 'a') {
-            act = actAir;
-        }
         IAction action = new IAction(act, d);
         IActionDao daoIAction = new IActionDao();
         IAction auxAction = daoIAction.get(action);
@@ -235,10 +204,109 @@ public class TopHatMB {
         histActDao.save(hist);
         return "room";
     }
+    
+    public String executeAction(String act) throws FileNotFoundException, IOException{
+        String actAir = "";
+                if (currentDevice.getType() == 'a') {
+            Properties props = new Properties();
+            File f = new File("src/komeco.properties");
+            FileInputStream file = new FileInputStream("C:\\airs\\komeco.properties");
+            props.load(file);
+            AirConditioner a = currentDevice.getAirConditioner();
+            switch (act) {
+                case "temp+":
+                    if (a.getTemperatura() != 30) {
+                        a.setTemperatuda(currentDevice.getAirConditioner().getTemperatura() + 1);
+                    }
+                    actAir = "auto" + currentDevice.getAirConditioner().getTemperatura();
+                    act = props.getProperty(actAir);
+                    break;
+                case "temp-":
+                    if (a.getTemperatura() != 17) {
+                        a.setTemperatuda(currentDevice.getAirConditioner().getTemperatura() - 1);
+                    }
+                    actAir = "auto" + currentDevice.getAirConditioner().getTemperatura();
+                    act = props.getProperty(actAir);
+                    break;
+                case "swing":
+                    actAir = "swing";
+                    act = props.getProperty("swing");
+                    break;
+                case "a":
+                    if (currentDevice.getAirConditioner().getLigado()) {
+                        actAir = "turOff";
+                        act = props.getProperty("turOff");
+                    } else {
+                        actAir = "turOn";
+                        act = props.getProperty("auto" + currentDevice.getAirConditioner().getTemperatura());
+                    }
+                    a.setLigado(!a.getLigado());
+                    break;
+                default:
+                    System.out.println("Action inválida");
+                    break;
+            }
+            new AirConditionerDao().save(a);
+            currentDevice.setAirConditioner(a);
+        }
+        try {
+            URL url = new URL("http://" + bean.getIp() + "/?" + act + currentDevice.getActionPort());
+            URLConnection con = url.openConnection();
+            con.getContent();
+        } catch (IOException e) {
+        }
+        if (currentDevice.getType() == 'l') {
+            if (currentDevice.getStatus() == 0) {
+                currentDevice.setStatusDevice(1);
+            } else {
+                currentDevice.setStatusDevice(0);
+            }
+        }
+        if(act.equalsIgnoreCase("a")){
+            return actAir;
+        }else{
+            return act;
+        }
+    }
 
-    public void activateTodoAction(int actionId) {
+    public String activateTodoAction(int actionId) {
         ToDoActionDao dao = new ToDoActionDao();
-        bean.getToDoAction().get(actionId).setActivated(Boolean.TRUE);
-        dao.save(bean.getToDoAction().get(actionId));
+        ToDoAction toDoAction = bean.getToDoAction().get(actionId);
+        toDoAction.setActivated(!toDoAction.getActivated());
+        dao.save(toDoAction);
+        if (bean.getToDoAction().get(actionId).getActivated()) {
+            //ativar agendamento
+            try {
+                // Grab the Scheduler instance from the Factory
+                Scheduler scheduler = Cluster.getSch();
+                
+                JobDataMap jdm = new JobDataMap();
+                jdm.put("action", toDoAction.getAction());
+
+
+                // specify the job' s details..
+                JobDetail job = JobBuilder.newJob(ExecuteToDoAction.class)
+                        .withIdentity(bean.getId() + "." + toDoAction.getAction().getDevice().getRoom().getName() + "." + toDoAction.getAction().getDevice().getName() + "." + toDoAction.getAction().getName() + "." + toDoAction.getDateTime())
+                        .setJobData(jdm)
+                        .build();
+
+                // specify the running period of the job
+                
+                CronTrigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity("trigger1", "group1")
+                    .withSchedule(cronSchedule("0/20 * * * * ?"))
+                    .build();
+
+                //schedule the job
+                scheduler.scheduleJob(job, trigger);
+
+
+            } catch (SchedulerException se) {
+                se.printStackTrace();
+            }
+        } else if (!bean.getToDoAction().get(actionId).getActivated()) {
+            //desativar agendamento
+        }
+        return "programation";
     }
 }
