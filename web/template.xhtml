@@ -27,7 +27,7 @@
                                 <c:forEach var="room" items="#{topHatMB.bean.rooms}">
                                     <p:menuitem  value="#{room.name}" action="#{topHatMB.selectRoom(room.name)}"/>
                                 </c:forEach>
-                                <p:menuitem  value="Programated Actions" action="programation"/>
+                                <p:menuitem  value="Programated Actions" action="#{topHatMB.selectProgramated}"/>
                             </p:menu>
                         </h:form>
                     </p:overlayPanel>

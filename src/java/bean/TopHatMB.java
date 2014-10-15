@@ -113,7 +113,6 @@ public class TopHatMB {
     public void setValidatedUser(boolean validatedUser) {
         this.validatedUser = validatedUser;
     }
-    
 
     /**
      * Creates a new instance of TopHatMB
@@ -184,6 +183,10 @@ public class TopHatMB {
         return "";
     }
 
+    public String selectProgramated() {
+        return "programation";
+    }
+
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
         currentDevice = d;
         act = this.executeAction(act);
@@ -205,10 +208,10 @@ public class TopHatMB {
         histActDao.save(hist);
         return "room";
     }
-    
-    public String executeAction(String act) throws FileNotFoundException, IOException{
+
+    public String executeAction(String act) throws FileNotFoundException, IOException {
         String actAir = "";
-                if (currentDevice.getType() == 'a') {
+        if (currentDevice.getType() == 'a') {
             Properties props = new Properties();
             File f = new File("src/komeco.properties");
             FileInputStream file = new FileInputStream("C:\\airs\\komeco.properties");
@@ -263,9 +266,9 @@ public class TopHatMB {
                 currentDevice.setStatusDevice(0);
             }
         }
-        if(act.equalsIgnoreCase("a")){
+        if (act.equalsIgnoreCase("a")) {
             return actAir;
-        }else{
+        } else {
             return act;
         }
     }
@@ -280,7 +283,7 @@ public class TopHatMB {
             try {
                 // Grab the Scheduler instance from the Factory
                 Scheduler scheduler = Cluster.getSch();
-                
+
                 JobDataMap jdm = new JobDataMap();
                 jdm.put("action", toDoAction.getAction());
 
@@ -292,18 +295,18 @@ public class TopHatMB {
                         .build();
 
                 // specify the running period of the job
-                String str = "0 "+ toDoAction.getDateTime().getMinutes() + " "+toDoAction.getDateTime().getHours() + " ? * ";
-                
-                if(toDoAction.getDateTime().getDate() == 1){ //Fim de semana
+                String str = "0 " + toDoAction.getDateTime().getMinutes() + " " + toDoAction.getDateTime().getHours() + " ? * ";
+
+                if (toDoAction.getDateTime().getDate() == 1) { //Fim de semana
                     str += "SUN-SAT";
-                } else if(toDoAction.getDateTime().getDate() == 2){//Dias de semana
+                } else if (toDoAction.getDateTime().getDate() == 2) {//Dias de semana
                     str += "W";
                 }
                 CronTrigger trigger;
                 trigger = TriggerBuilder.newTrigger()
-                    .withIdentity("trigger1", "group1")
-                    .withSchedule(CronScheduleBuilder.cronSchedule(str))
-                    .build();
+                        .withIdentity("trigger1", "group1")
+                        .withSchedule(CronScheduleBuilder.cronSchedule(str))
+                        .build();
 
                 //schedule the job
                 scheduler.scheduleJob(job, trigger);
