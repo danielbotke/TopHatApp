@@ -273,6 +273,7 @@ public class Mineracao {
                         } else {
                             toDoDate.setMinutes(30);
                         }
+                        toDoDate.setDate(1);
                         ToDoAction toDoAct = new ToDoAction();
                         IAction act = new IAction(actions[a], devices.get(d));
                         todoDao.save(new ToDoAction(toDoDate, act, h, Boolean.FALSE));
@@ -472,6 +473,7 @@ public class Mineracao {
                         } else {
                             toDoDate.setMinutes(30);
                         }
+                        toDoDate.setDate(2);
                         ToDoAction toDoAct = new ToDoAction();
                         IAction act = new IAction(actions[a], devices.get(d));
                         todoDao.save(new ToDoAction(toDoDate, act, h, Boolean.FALSE));

@@ -35,6 +35,7 @@ import models.IUser;
 import models.Room;
 import models.ToDoAction;
 import org.brickred.socialauth.Profile;
+import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -291,10 +292,17 @@ public class TopHatMB {
                         .build();
 
                 // specify the running period of the job
+                String str = "0 "+ toDoAction.getDateTime().getMinutes() + " "+toDoAction.getDateTime().getHours() + " ? * ";
                 
-                CronTrigger trigger = TriggerBuilder.newTrigger()
+                if(toDoAction.getDateTime().getDate() == 1){ //Fim de semana
+                    str += "SUN-SAT";
+                } else if(toDoAction.getDateTime().getDate() == 2){//Dias de semana
+                    str += "W";
+                }
+                CronTrigger trigger;
+                trigger = TriggerBuilder.newTrigger()
                     .withIdentity("trigger1", "group1")
-                    .withSchedule(cronSchedule("0/20 * * * * ?"))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(str))
                     .build();
 
                 //schedule the job
