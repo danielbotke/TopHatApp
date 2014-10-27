@@ -295,7 +295,8 @@ public class TopHatMB {
                         .build();
 
                 // specify the running period of the job
-                String str = "0 " + toDoAction.getDateTime().getMinutes() + " " + toDoAction.getDateTime().getHours() + " ? * ";
+                String str = "0 " + toDoAction.getDateTime().getMinutes() + 
+                            " " + toDoAction.getDateTime().getHours() + " ? * ";
 
                 if (toDoAction.getDateTime().getDate() == 1) { //Fim de semana
                     str += "SUN-SAT";

@@ -37,26 +37,17 @@ public class UserSessionBean implements Serializable {
     public void socialConnect(String providerIDSelected) throws Exception {
         this.setProviderID(providerIDSelected);
         System.out.println(providerID);
-        //Create an instance of SocialAuthConfgi object
         SocialAuthConfig config = SocialAuthConfig.getDefault();
 
-        //load configuration. By default load the configuration from oauth_consumer.properties. 
-        //You can also pass input stream, properties object or properties file name.
         config.load();
 
-        //Create an instance of SocialAuthManager and set config
         SocialAuthManager manager = new SocialAuthManager();
         manager.setSocialAuthConfig(config);
 
-        // URL of YOUR application which will be called after authentication
         String successUrl = "http://tophat.tcc.br/TopHatApp/home.jsf";
 
-        // get Provider URL to which you should redirect for authentication.
-        // id can have values "facebook", "twitter", "yahoo" etc. or the OpenID URL
         String url = manager.getAuthenticationUrl(providerID, successUrl);
 
-
-        // Store in session
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         session.setAttribute("authManager", manager);
         FacesContext.getCurrentInstance().getExternalContext().redirect(url);
