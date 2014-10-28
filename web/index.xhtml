@@ -3,30 +3,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <head>
+        <link rel="stylesheet" type="text/css" href="resources\tophat.css"/>
         <title> TopHat Automação </title>
     </head>
     <body onload="#{main.UDPListener()}">
+        <div class="bg"></div>
         <f:view>
             <ui:param name="originalURL" value="#{request.requestURI}?#{request.queryString}" />
             <f:metadata>
                 <f:event rendered="#{empty userSession.profile}" type="preRenderView" listener="#{userSession.setOriginalURL(originalURL)}" />
             </f:metadata>
-
-            <h:form>
-                <h:panelGroup rendered="#{empty userSession.profile}" id="socialButtons" >
-                    <h:commandLink id="facebook" action="#{userSession.socialConnect('facebook')}" >
-                        <h:graphicImage value="http://www.guiamedianeira.com.br/temas/2012/imagens/login_facebook.jpg" />
-                    </h:commandLink>
-                </h:panelGroup>
-
-                <h:panelGrid columns="3" rendered="#{not empty userSession.profile}" >
-                    <h:graphicImage rendered="#{not empty userSession.profile.profileImageURL}" value="#{userSession.profile.profileImageURL}" />
-                    <h:outputText value="Hello, #{userSession.profile.fullName}" />
-                    <h:commandButton value="Log out" actionListener="#{userSession.logOut}" />
-                </h:panelGrid>
-            </h:form>
+            <div class="login">
+                <h1>TopHat Automação Residencial</h1>
+                <h:form>
+                    <h:panelGroup  id="socialButtons" >
+                        <h:commandLink id="facebook" action="#{userSession.socialConnect('facebook')}" >
+                            <h:graphicImage value="http://www.guiamedianeira.com.br/temas/2012/imagens/login_facebook.jpg" />
+                        </h:commandLink>
+                    </h:panelGroup>
+                </h:form>
+            </div>
         </f:view>
     </body>
 </html>

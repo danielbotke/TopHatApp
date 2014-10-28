@@ -1,0 +1,40 @@
+div.login{
+    width: 30%;
+    margin-left: 35%;
+    text-align: center;
+    margin-top: 15%;
+    padding: 2%;
+    font-family: sans-serif;
+    font-size: 14px;
+    background-color: #e1e1e1;
+    border: solid 1px #A3A3A3;
+    border-radius: 3px;
+    color: #666;
+    z-index: 10;
+}
+
+
+div.bg{
+    width: 100%;
+    height: 100%;
+    background-image: url('bg.jpg');
+    background-position: center;
+    background-size: 100% 100%; 
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+}
+
+div.body{
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 5%;
+    background-color: whitesmoke;
+    border-radius: 3px;
+    font-family: sans-serif;
+    padding: 5px;
+}
+button.logout{
+    float: right;
+}

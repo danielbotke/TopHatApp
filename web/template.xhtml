@@ -8,51 +8,60 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core">
     <h:head>
         <title>Automação de Reservas e Pedido</title>
-        <link rel = "stylesheet" type = "text/css" href = "sitestyle.css" />
+        <link rel="stylesheet" type="text/css" href="resources\tophat.css"/>
     </h:head>
     <h:body onload="#{topHatMB.validateUser()}">
-        <pom:page  rendered="#{topHatMB.isUser == true}"> 
-            <ui:insert name="cabecalho">
-                <pom:header title="TopHat" swatch="b">
-                        <p:commandButton id="btn-menu" value="Menu" type="button" styleClass="ui-btn-left ui-btn-inline"/>
-                        <p:button id="btn-back" value="Home" styleClass="ui-btn-left ui-btn-inline" outcome="home"/>
-                </pom:header>
-            </ui:insert>
-            <ui:insert name="menu">
-                <pom:content styleClass="jqm-content">
-                    <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay" >
-                        <h2>Rooms</h2>
-                        <h:form >
-                            <p:menu>
-                                <c:forEach var="room" items="#{topHatMB.bean.rooms}">
-                                    <p:menuitem  value="#{room.name}" action="#{topHatMB.selectRoom(room.name)}"/>
-                                </c:forEach>
-                                <p:menuitem  value="Programated Actions" action="#{topHatMB.selectProgramated}"/>
-                            </p:menu>
+        <div class="bg"></div>
+        <div class="body">
+            <pom:page  rendered="#{topHatMB.isUser == true}"> 
+                <ui:insert name="cabecalho">
+                    <pom:header title="TopHat" swatch="b">
+                        <h:form>
+                            <p:commandButton id="btn-menu" value="Menu" type="button" styleClass="ui-btn-left ui-btn-inline"/>
+                            <p:button id="btn-back" value="Home" styleClass="ui-btn-left ui-btn-inline" outcome="home"/>
+                            <p:commandButton value="Sair" actionListener="#{userSession.logOut}" styleClass="ui-btn-left ui-btn-inline logout"/>
+                            <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay" >
+                                <h2>Rooms</h2>
+                                    <p:menu>
+                                        <c:forEach var="room" items="#{topHatMB.bean.rooms}">
+                                            <p:menuitem  value="#{room.name}" action="#{topHatMB.selectRoom(room.name)}"/>
+                                        </c:forEach>
+                                        <p:menuitem  value="Programated Actions" action="#{topHatMB.selectProgramated}"/>
+                                    </p:menu>
+                            </p:overlayPanel>
                         </h:form>
-                    </p:overlayPanel>
-                </pom:content>
-            </ui:insert>
-            <ui:insert name="corpo"/>
-        </pom:page>
-        <pom:page rendered="#{topHatMB.isUser == false}">
-            <ui:insert name="cabecalho">
-                <pom:header title="TopHat" swatch="b">
-                    <h1>Vemos que você é novo por aqui</h1>
-                    <h:form>
-                        <h:outputLabel id="homeId" value="Informe o código de sua residência"></h:outputLabel>
-                        <h:inputText value="#{topHatMB.bean.id}"></h:inputText>
-                        <h:commandButton value="Confirmar" action="#{topHatMB.addUser()}" type="submit"></h:commandButton>
-                    </h:form>
-                </pom:header>
-            </ui:insert>
-        </pom:page>
+                        <h:panelGrid columns="2" rendered="#{not empty userSession.profile}" >
+                            <h:graphicImage rendered="#{not empty userSession.profile.profileImageURL}" value="#{userSession.profile.profileImageURL}" />
+                            <h:outputText value="Olá, #{userSession.profile.fullName}" />
+                        </h:panelGrid>
+                    </pom:header>
+                </ui:insert>
+                <ui:insert name="menu">
+                    <pom:content styleClass="jqm-content">
 
-        <ui:insert name="rodape">
-            <hr/>
-            <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
-            <p>Fim do Mundo - AC</p>
-            <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
-        </ui:insert>
+                    </pom:content>
+                </ui:insert>
+                <ui:insert name="corpo"/>
+            </pom:page>
+            <pom:page rendered="#{topHatMB.isUser == false}">
+                <ui:insert name="cabecalho">
+                    <pom:header title="TopHat" swatch="b">
+                        <h1>Vemos que você é novo por aqui</h1>
+                        <h:form>
+                            <h:outputLabel id="homeId" value="Informe o código de sua residência"></h:outputLabel>
+                            <h:inputText value="#{topHatMB.bean.id}"></h:inputText>
+                            <h:commandButton value="Confirmar" action="#{topHatMB.addUser()}" type="submit"></h:commandButton>
+                        </h:form>
+                    </pom:header>
+                </ui:insert>
+            </pom:page>
+
+            <ui:insert name="rodape">
+                <hr/>
+                <p>Rua Frederico Sneider Rofmann, 677 Vila Estreita | CEP:77098-098</p>
+                <p>Fim do Mundo - AC</p>
+                <p>COPYRIGHT © 2012 DJRT S.A. - TODOS OS DIREITOS RESERVADOS.</p>
+            </ui:insert>
+        </div>
     </h:body>
 </html>
