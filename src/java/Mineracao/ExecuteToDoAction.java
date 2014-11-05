@@ -5,13 +5,10 @@ package Mineracao;
  * and open the template in the editor.
  */
 import bean.TopHatMB;
-import bean.UserSessionBean;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import models.ToDoAction;

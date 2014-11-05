@@ -4,6 +4,8 @@
  */
 package models;
 
+import dao.DeviceDao;
+import dao.IActionDao;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,6 +62,9 @@ public class IAction implements Serializable {
         this.device = device;
     }
 
-
+        public Device getDevicePopulate() {
+        device = (new DeviceDao()).get(this);
+        return device;
+    }
     
 }

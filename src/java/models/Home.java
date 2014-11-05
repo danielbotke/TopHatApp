@@ -5,6 +5,7 @@
 package models;
 
 import dao.RoomDao;
+import dao.ToDoActionDao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Home implements Serializable {
     private List<IUser> users = new ArrayList<>();
     @OneToMany(mappedBy = "home", targetEntity = HistAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HistAction> histAction = new ArrayList<>();
-    @OneToMany(mappedBy = "home", targetEntity = ToDoAction.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "home", targetEntity = ToDoAction.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ToDoAction> toDoAction = new ArrayList<>();
     @Column
     private String ip;

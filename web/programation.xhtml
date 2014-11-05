@@ -8,12 +8,12 @@
     <ui:composition template="/template.xhtml">
         <ui:define name="corpo">
             <c:forEach var="toDoAction" items="#{topHatMB.bean.toDoAction}">
-                <h:outputLabel id="#{toDoAction.id}" value="#{toDoAction.action.name + ' a ' + toDoAction.action.device.name + ' a ' + toDoAction.action.device.room.name + ' sempre às: ' + toDoAction.dateTime} "/>
+                <h:outputLabel value="#{toDoAction.description}" />
                 <c:if test="#{toDoAction.activated == true}">
-                    <p:commandButton accesskey="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Desativar"/>
+                    <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Desativar"/>
                 </c:if>
                 <c:if test="#{toDoAction.activated == false}">
-                    <p:commandButton accesskey="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Ativar"/>
+                    <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Ativar"/>
                 </c:if>
             </c:forEach>
         </ui:define>

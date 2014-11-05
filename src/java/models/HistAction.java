@@ -27,10 +27,10 @@ public class HistAction implements Serializable {
     @GeneratedValue
     private int id;
     @Column(nullable=false)
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateTime;
     @OneToOne
-     @MapsId
+    @MapsId
     private IAction action;
     @ManyToOne
     @JoinColumn(name = "home_id", nullable=false)

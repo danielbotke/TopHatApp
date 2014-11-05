@@ -2,7 +2,6 @@ package bean;
 
 
 import Mineracao.Mineracao;
-import bean.TopHatMB;
 import dao.AirConditionerDao;
 import dao.DeviceDao;
 import dao.HomeDao;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -171,7 +169,7 @@ public class Cluster {
         @Override
         public void run() {
             Date d = new Date();
-            if (d.getHours() == 3 && d.getMinutes() >= 20 && d.getMinutes() <= 30) {
+            if (d.getHours() == 22 /*&& d.getMinutes() >= 20 && d.getMinutes() <= 30*/) {
                 HomeDao daoHome = new HomeDao();
                 Mineracao miningHistory = new Mineracao();
                 List<Home> homes = daoHome.list();
@@ -180,7 +178,7 @@ public class Cluster {
                 }
             } else {
                 try {
-                    sleep(600000);
+                    sleep(2400000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Cluster.class.getName()).log(Level.SEVERE, null, ex);
                 }

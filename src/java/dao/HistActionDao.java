@@ -82,6 +82,10 @@ public class HistActionDao {
         EntityManager em = JpaUtil.get().getEntityManager();
         try {
             Query q = em.createQuery("select h from HistAction as h where h.dateTime BETWEEN :dataIni AND :dataEnd and h.action.name = :action and h.action.device.id = :dev");
+            q.setParameter("dataIni", dataIni);
+            q.setParameter("dataEnd", dataEnd);
+            q.setParameter("action", action);
+            q.setParameter("dev", dev.getId());
             return q.getResultList();
         } finally {
             em.close();

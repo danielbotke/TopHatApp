@@ -183,7 +183,12 @@ public class TopHatMB {
         return "";
     }
 
-    public String selectProgramated() {
+    public String selectProgramated() { 
+        bean.setToDoAction((new ToDoActionDao()).list(bean.getId()));
+        /*for (int i = 0; i < bean.getToDoAction().size(); i++) {
+            bean.getToDoAction().get(i).getActionPopulate().getDevicePopulate().getRoomPopulate();
+        }
+        */
         return "programation";
     }
 

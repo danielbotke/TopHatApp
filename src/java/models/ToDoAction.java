@@ -4,10 +4,13 @@
  */
 package models;
 
+import dao.IActionDao;
+import dao.ToDoActionDao;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,9 +30,9 @@ public class ToDoAction implements Serializable {
     @GeneratedValue
     private int id;
     @Column(nullable = false)
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dateTime;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     private IAction action;
     @ManyToOne
@@ -37,6 +40,8 @@ public class ToDoAction implements Serializable {
     private Home home;
     @Column(nullable = false)
     private Boolean activated;
+    @Column(nullable = false)
+    private String description;
 
     public ToDoAction(Date dateTime, IAction action, Home home, Boolean activated) {
         this.dateTime = dateTime;
@@ -88,6 +93,18 @@ public class ToDoAction implements Serializable {
     public void setActivated(Boolean activated) {
         this.activated = activated;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     
     
+    public IAction getActionPopulate() {
+        action = (new IActionDao()).get(this);
+        return action;
+    }
 }

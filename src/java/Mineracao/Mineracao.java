@@ -6,9 +6,11 @@ package Mineracao;
 
 import dao.DeviceDao;
 import dao.HistActionDao;
+import dao.IActionDao;
 import dao.ToDoActionDao;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import models.Device;
@@ -32,13 +34,13 @@ public class Mineracao {
             date.setMonth(date.getMonth() - 3);
         } else if (date.getMonth() == 3) {
             date.setMonth(12);
-            date.setYear(date.getYear() -1);
+            date.setYear(date.getYear() - 1);
         } else if (date.getMonth() == 2) {
             date.setMonth(11);
-            date.setYear(date.getYear() -1);
+            date.setYear(date.getYear() - 1);
         } else if (date.getMonth() == 1) {
             date.setMonth(10);
-            date.setYear(date.getYear() -1);
+            date.setYear(date.getYear() - 1);
         }
         String actions[] = {"l", "d", "turOff", "turOn"};
         List<Device> devices = deviceDao.listAll();
@@ -53,8 +55,12 @@ public class Mineracao {
                 List<HistAction> weekdaysMorning = new ArrayList<>();
                 int[] minutes;
                 minutes = new int[48];
+                GregorianCalendar gc = new GregorianCalendar();
+                int diaDaSemana;
                 for (int i = 0; i < data.size(); i++) {
-                    if (data.get(i).getDateTime().getDay() == 1 || data.get(i).getDateTime().getDay() == 6) {
+                    gc.setTime(data.get(i).getDateTime());
+                    diaDaSemana = gc.get(GregorianCalendar.DAY_OF_WEEK);
+                    if (diaDaSemana == 1 || diaDaSemana == 7) {
                         weekend.add(data.get(i));
                     } else {
                         weekdays.add(data.get(i));
@@ -274,9 +280,20 @@ public class Mineracao {
                             toDoDate.setMinutes(30);
                         }
                         toDoDate.setDate(1);
-                        ToDoAction toDoAct = new ToDoAction();
-                        IAction act = new IAction(actions[a], devices.get(d));
-                        todoDao.save(new ToDoAction(toDoDate, act, h, Boolean.FALSE));
+                        toDoDate.setSeconds(0);
+                        IAction action = new IAction(actions[a], devices.get(d));
+                        IActionDao daoIAction = new IActionDao();
+                        IAction auxAction = daoIAction.get(action);
+                        if (auxAction == null) {
+                            daoIAction.save(action);
+                        } else {
+                            action.setId(auxAction.getId());
+                        }
+                        ToDoAction toDoAct = new ToDoAction(toDoDate, action, h, Boolean.FALSE);
+                        ToDoAction toDoActAux = todoDao.get(toDoAct);
+                        if (toDoActAux == null) {
+                            todoDao.save(toDoAct);
+                        }
                     }
                 }
                 minutes = new int[48];
@@ -474,9 +491,20 @@ public class Mineracao {
                             toDoDate.setMinutes(30);
                         }
                         toDoDate.setDate(2);
-                        ToDoAction toDoAct = new ToDoAction();
-                        IAction act = new IAction(actions[a], devices.get(d));
-                        todoDao.save(new ToDoAction(toDoDate, act, h, Boolean.FALSE));
+                        toDoDate.setSeconds(0);
+                        IAction action = new IAction(actions[a], devices.get(d));
+                        IActionDao daoIAction = new IActionDao();
+                        IAction auxAction = daoIAction.get(action);
+                        if (auxAction == null) {
+                            daoIAction.save(action);
+                        } else {
+                            action.setId(auxAction.getId());
+                        }
+                        ToDoAction toDoAct = new ToDoAction(toDoDate, action, h, Boolean.FALSE);
+                        ToDoAction toDoActAux = todoDao.get(toDoAct);
+                        if (toDoActAux == null) {
+                            todoDao.save(toDoAct);
+                        }
                     }
                 }
             }
