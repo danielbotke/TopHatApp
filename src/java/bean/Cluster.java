@@ -172,7 +172,7 @@ public class Cluster {
         @Override
         public void run() {
             Date d = new Date();
-            if (d.getHours() == 21 /*&& d.getMinutes() >= 20 && d.getMinutes() <= 30*/) {
+            if (d.getHours() == 3 && d.getMinutes() >= 20 && d.getMinutes() <= 30) {
                 HomeDao daoHome = new HomeDao();
                 Mineracao miningHistory = new Mineracao();
                 List<Home> homes = daoHome.list();

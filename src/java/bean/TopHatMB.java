@@ -43,7 +43,6 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,8 +195,6 @@ public class TopHatMB {
     public String addHistAction(Device d, String act) throws MalformedURLException, IOException {
         currentDevice = d;
         act = this.executeAction(act);
-        DeviceDao daoDevice = new DeviceDao();
-        daoDevice.save(d);
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
@@ -272,6 +269,7 @@ public class TopHatMB {
                 currentDevice.setStatusDevice(0);
             }
         }
+        new DeviceDao().save(currentDevice);
         if (act.equalsIgnoreCase("a")) {
             return actAir;
         } else {
