@@ -4,6 +4,7 @@
  */
 package dao;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -46,9 +47,9 @@ public class ToDoActionDao {
         String deviceDescript = "";
         int temperatura = 0;
         if (t.getAction().getDevice().getType() == 'l') {
-            deviceDescript = "Luz";
+            deviceDescript = "luz";
         } else if (t.getAction().getDevice().getType() == 'a') {
-            deviceDescript = "Ar Condicionado";
+            deviceDescript = "ar Condicionado";
         }
         switch (t.getAction().getName()) {
             case "l":
@@ -80,9 +81,9 @@ public class ToDoActionDao {
             dia = "dias da semana";
     }
         if(temperatura > 0){
-            t.setDescription(actionDescript + deviceDescript + " do(a) " + t.getAction().getDevice().getRoom().getName() + " em " + temperatura +" graus, sempre às " + t.getDateTime().getTime() +" nos " + dia + ".");
+            t.setDescription(actionDescript + deviceDescript + " do(a) " + t.getAction().getDevice().getRoom().getName() + " em " + temperatura +" graus, sempre às " + new SimpleDateFormat("HH:mm").format(t.getDateTime()) +" nos " + dia + ".");
         }else{
-            t.setDescription(actionDescript + deviceDescript + " do(a) " + t.getAction().getDevice().getRoom().getName() + " sempre às " + t.getDateTime().getTime() +" nos " + dia + ".");
+            t.setDescription(actionDescript + deviceDescript + " do(a) " + t.getAction().getDevice().getRoom().getName() + " sempre às " + new SimpleDateFormat("HH:mm").format(t.getDateTime()) +" nos " + dia + ".");
         }
         EntityManager em = JpaUtil.get().getEntityManager();
         EntityTransaction trans = em.getTransaction();

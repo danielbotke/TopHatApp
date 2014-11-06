@@ -7,15 +7,19 @@
       xmlns:ui="http://java.sun.com/jsf/facelets">
     <ui:composition template="/template.xhtml">
         <ui:define name="corpo">
-            <c:forEach var="toDoAction" items="#{topHatMB.bean.toDoAction}">
-                <h:outputLabel value="#{toDoAction.description}" />
-                <c:if test="#{toDoAction.activated == true}">
-                    <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Desativar"/>
-                </c:if>
-                <c:if test="#{toDoAction.activated == false}">
-                    <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction.id)}" value="Ativar"/>
-                </c:if>
-            </c:forEach>
+            <h:form>
+                <p:outputPanel>
+                    <c:forEach var="toDoAction" items="#{topHatMB.bean.toDoAction}">
+                        <h:outputLabel value="#{toDoAction.description}" />
+                        <c:if test="#{toDoAction.activated == true}">
+                            <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction)}" value="Desativar" ajax="false" />
+                        </c:if>
+                        <c:if test="#{toDoAction.activated == false}">
+                            <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction)}" value="Ativar" ajax="false" />
+                        </c:if>
+                    </c:forEach>
+                </p:outputPanel>
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>

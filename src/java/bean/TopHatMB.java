@@ -43,6 +43,7 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -278,16 +279,16 @@ public class TopHatMB {
         }
     }
 
-    public String activateTodoAction(int actionId) {
+    public String activateTodoAction(ToDoAction toDoAction) throws SchedulerException {
         ToDoActionDao dao = new ToDoActionDao();
-        ToDoAction toDoAction = bean.getToDoAction().get(actionId);
+      //  ToDoAction toDoAction = bean.getToDoAction().get(actionId);
         toDoAction.setActivated(!toDoAction.getActivated());
-        dao.save(toDoAction);
-        if (bean.getToDoAction().get(actionId).getActivated()) {
+        Scheduler scheduler = Cluster.getSch();
+        if (toDoAction.getActivated()) {
             //ativar agendamento
             try {
                 // Grab the Scheduler instance from the Factory
-                Scheduler scheduler = Cluster.getSch();
+                
 
                 JobDataMap jdm = new JobDataMap();
                 jdm.put("action", toDoAction.getAction());
@@ -306,11 +307,11 @@ public class TopHatMB {
                 if (toDoAction.getDateTime().getDate() == 1) { //Fim de semana
                     str += "SUN-SAT";
                 } else if (toDoAction.getDateTime().getDate() == 2) {//Dias de semana
-                    str += "W";
+                    str += "2-6";
                 }
                 CronTrigger trigger;
                 trigger = TriggerBuilder.newTrigger()
-                        .withIdentity("trigger1", "group1")
+                        .withIdentity(""+toDoAction.getId(), "group1")
                         .withSchedule(CronScheduleBuilder.cronSchedule(str))
                         .build();
 
@@ -321,9 +322,11 @@ public class TopHatMB {
             } catch (SchedulerException se) {
                 se.printStackTrace();
             }
-        } else if (!bean.getToDoAction().get(actionId).getActivated()) {
+        } else if (!toDoAction.getActivated()) {
             //desativar agendamento
+            scheduler.interrupt(bean.getId() + "." + toDoAction.getAction().getDevice().getRoom().getName() + "." + toDoAction.getAction().getDevice().getName() + "." + toDoAction.getAction().getName() + "." + toDoAction.getDateTime());
         }
+        dao.save(toDoAction);
         return "programation";
     }
 }
