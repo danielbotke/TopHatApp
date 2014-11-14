@@ -9,7 +9,7 @@
         <ui:define name="corpo">
             <c:forEach var="device" items="#{topHatMB.currentRoom.devices}">
                 <c:if test="#{device.type == 'w'}">
-                    <p:panel header="Window" toggleable="true">
+                    <p:panel header="Janela" toggleable="true">
                         <c:choose>
                             <c:when test="#{device.statusDevice == 0}">
                                 <h:outputText value="Janela fechada"/>
@@ -22,15 +22,15 @@
                 </c:if>
                 <c:if test="#{device.type == 'l'}">
                     <h:form>
-                        <p:panel header="Light" toggleable="true">
+                        <p:panel header="Luz" toggleable="true">
                             <p:outputPanel>
                                 <c:choose>
                                     <c:when test="#{device.statusDevice == 0}">
 
-                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'l')}" value="Turn on" ajax="false"/><br/>
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'l')}" value="Ligar" ajax="false"/><br/>
                                     </c:when>
                                     <c:otherwise>
-                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'd')}" value="Turn off" ajax="false"/><br/>
+                                        <p:commandButton  action="#{topHatMB.addHistAction(device, 'd')}" value="Desligar" ajax="false"/><br/>
                                     </c:otherwise>
                                 </c:choose>
                             </p:outputPanel>
@@ -39,16 +39,16 @@
                 </c:if>
                 <c:if test="#{device.type == 'a'}">
                     <h:form>
-                        <p:panel header="Air Conditioner" toggleable="true">
+                        <p:panel header="Ar condicionado" toggleable="true">
                             <h:panelGrid columns="2" id="grid" rendered="#{device.airConditioner.ligado == true}"> 
                                 <h:outputLabel for="temp" value="Temperatura: #{device.airConditioner.temperatura}" /><h:outputLabel/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp+')}" value="Temp +" ajax="false"/><br/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'temp-')}" value="Temp -" ajax="false"/><br/>
                                 <p:commandButton  action="#{topHatMB.addHistAction(device, 'swing')}" value="Swing" ajax="false"/><br/>
-                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn off" ajax="false"/><br/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Desligar" ajax="false"/><br/>
                             </h:panelGrid>                    
                             <p:outputPanel rendered="#{device.airConditioner.ligado == false}">
-                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Turn on" ajax="false"/><br/>
+                                <p:commandButton  action="#{topHatMB.addHistAction(device, 'a')}" value="Ligar" ajax="false"/><br/>
                             </p:outputPanel>
                         </p:panel>
                     </h:form>

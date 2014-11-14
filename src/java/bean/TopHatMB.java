@@ -198,7 +198,7 @@ public class TopHatMB {
         HistAction hist = new HistAction();
         hist.setHome(bean);
         hist.setDateTime(new Date());
-        IAction action = new IAction(act, d);
+        IAction action = new IAction(act, currentDevice);
         IActionDao daoIAction = new IActionDao();
         IAction auxAction = daoIAction.get(action);
         if (auxAction == null) {
@@ -216,7 +216,6 @@ public class TopHatMB {
         String actAir = "";
         if (currentDevice.getType() == 'a') {
             Properties props = new Properties();
-            File f = new File("src/komeco.properties");
             FileInputStream file = new FileInputStream("C:\\airs\\komeco.properties");
             props.load(file);
             AirConditioner a = currentDevice.getAirConditioner();
@@ -241,11 +240,11 @@ public class TopHatMB {
                     break;
                 case "a":
                     if (currentDevice.getAirConditioner().getLigado()) {
-                        actAir = "turOff";
-                        act = props.getProperty("turOff");
+                        actAir = "turnOff";
+                        act = props.getProperty("turnOff");
                     } else {
-                        actAir = "turOn";
-                        act = props.getProperty("auto" + currentDevice.getAirConditioner().getTemperatura());
+                        actAir = "turnOn";
+                        act = props.getProperty("turnOn");
                     }
                     a.setLigado(!a.getLigado());
                     break;
@@ -270,7 +269,7 @@ public class TopHatMB {
             }
         }
         new DeviceDao().save(currentDevice);
-        if (act.equalsIgnoreCase("a")) {
+        if (currentDevice.getType() == 'a') {
             return actAir;
         } else {
             return act;

@@ -19,12 +19,12 @@
                         <h:form>
                             <p:commandButton id="btnmenu" value="Menu" type="button" styleClass="ui-btn-left ui-btn-inline" />
                             <p:button id="btn-back" value="Home" styleClass="ui-btn-left ui-btn-inline" outcome="home"/>
-                            <p:commandButton value="Sair" actionListener="#{userSession.logOut}" styleClass="ui-btn-left ui-btn-inline logout"/>
                             <p:menu overlay="true" trigger="btnmenu" my="left top" at="left bottom">
                                 <c:forEach var="room" items="#{topHatMB.bean.rooms}">
                                     <p:menuitem  value="  #{room.name}" action="#{topHatMB.selectRoom(room.name)}"/>
                                 </c:forEach>
-                                <p:menuitem  value="  Programated Actions" action="#{topHatMB.selectProgramated()}"/>
+                                <p:menuitem  value="Ações Programadas" action="#{topHatMB.selectProgramated()}"/>
+                                <p:menuitem  value="Sair" action="#{userSession.logOut()}"/>
                             </p:menu>
                         </h:form>
                         <h:panelGrid columns="2" rendered="#{not empty userSession.profile}" >

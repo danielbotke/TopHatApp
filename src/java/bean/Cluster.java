@@ -124,13 +124,13 @@ public class Cluster {
                                 } else if (createdRoom != null) {
                                     switch (nxt) {
                                         case "l":
-                                            createdDevice = new Device("Light", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
+                                            createdDevice = new Device("Luz", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
                                             break;
                                         case "w":
-                                            createdDevice = new Device("Window", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
+                                            createdDevice = new Device("Janela", Integer.parseInt(devices.nextToken()), Integer.parseInt(devices.nextToken()), nxt.charAt(0));
                                             break;
                                         case "a":
-                                            createdDevice = new Device("Air conditioner", Integer.parseInt(devices.nextToken()), 0, nxt.charAt(0));
+                                            createdDevice = new Device("Ar condicionado", Integer.parseInt(devices.nextToken()), 0, nxt.charAt(0));
                                             break;
                                         default:
                                             createdDevice = null;
