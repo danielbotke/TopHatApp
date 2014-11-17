@@ -38,3 +38,7 @@ div.body{
 button.logout{
     float: right;
 }
+
+center.rodape p{
+    font-size: 1em;
+}

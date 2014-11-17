@@ -17,6 +17,7 @@
                         <c:if test="#{toDoAction.activated == false}">
                             <p:commandButton action="#{topHatMB.activateTodoAction(toDoAction)}" value="Ativar" ajax="false" />
                         </c:if>
+                        <br/>
                     </c:forEach>
                 </p:outputPanel>
             </h:form>

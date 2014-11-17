@@ -41,10 +41,11 @@ public class Cluster {
     public static Scheduler sch;
 
     public void UDPListener() {
-        if (!udp.isAlive()) {
+        if (udp.getState() == Thread.State.NEW) {
             udp.start();
         }
-        if (!mining.isAlive()) {
+        
+        if (mining.getState() == Thread.State.NEW) {
             mining.start();
         }
     }
